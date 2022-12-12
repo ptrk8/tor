@@ -26,7 +26,6 @@ build: build-sel4cp \
 .PHONY: build-sel4cp
 build-sel4cp:
 	cd $(SEL4CP_SUBMODULE) && \
-		# Create a Python virtual environment
 		python3.9 -m venv sel4cp_venv
 
 
