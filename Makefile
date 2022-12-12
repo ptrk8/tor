@@ -5,7 +5,7 @@ SEL4CP_SUBMODULE = ./sel4cp
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
 HOME_USER_HOST = patrick@vm_comp4961_ubuntu1804
-HOME_DEST_DIR = ~/remote/$(shell hostname -s)/
+HOME_REMOTE_DIR = ~/remote/$(shell hostname -s)/
 
 SEL4CP_PYTHON_VENV = sel4cp_venv
 
@@ -15,12 +15,12 @@ SEL4CP_PYTHON_VENV = sel4cp_venv
 
 push-home:
 	# Make the directory on the remote if it doesn't exist already.
-	(ssh -t $(HOME_USER_HOST) "mkdir -p $(HOME_DEST_DIR)$(PWD_DIR)")
+	ssh -t $(HOME_USER_HOST) "mkdir -p $(HOME_REMOTE_DIR)$(PWD_DIR)"
 	# Sync our current directory with the remote.
-	(rsync -a \
+	rsync -a \
  			--delete \
  			--exclude "$(SEL4CP_PYTHON_VENV)" \
- 			./ $(HOME_USER_HOST):$(HOME_DEST_DIR)$(PWD_DIR))
+ 			./ $(HOME_USER_HOST):$(HOME_REMOTE_DIR)$(PWD_DIR)
 
 # ==================================
 # Initialisation
