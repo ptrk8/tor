@@ -1,0 +1,3 @@
+[submodule "sel4cp"]
+	path = sel4cp
+	url = https://github.com/BreakawayConsulting/sel4cp.git
