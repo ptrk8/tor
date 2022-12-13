@@ -21,12 +21,13 @@ LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 # =================================
 # Generated Files
 # =================================
-
-SEL4CP_RELEASE = $(SEL4CP_SUBMODULE)/release
-SEL4CP_BUILD = $(SEL4CP_SUBMODULE)/build
-SEL4CP_SDK = $(SEL4CP_RELEASE)/sel4cp-sdk-1.2.6
-
-SDDF_BUILD = $(SDDF_SUBMODULE)/echo_server/build
+# seL4CP
+SEL4CP_RELEASE_DIR = $(SEL4CP_SUBMODULE)/release
+SEL4CP_BUILD_DIR = $(SEL4CP_SUBMODULE)/build
+SEL4CP_SDK_DIR = $(SEL4CP_RELEASE_DIR)/sel4cp-sdk-1.2.6
+# sDDF
+SDDF_BUILD_DIR = $(SDDF_SUBMODULE)/echo_server/build
+SDDF_LOADER_IMG = $(SDDF_SUBMODULE)/echo_server/build/loader.img
 
 # =================================
 # Clean
@@ -35,8 +36,10 @@ SDDF_BUILD = $(SDDF_SUBMODULE)/echo_server/build
 .PHONY: clean
 clean:
 	rm -rf $(SEL4CP_PYTHON_VENV_PATH)
-	rm -rf $(SEL4CP_RELEASE)
-	rm -rf $(SEL4CP_BUILD)
+	rm -rf $(SEL4CP_RELEASE_DIR)
+	rm -rf $(SEL4CP_BUILD_DIR)
+	rm -rf $(SDDF_BUILD_DIR)
+	rm -rf $(SDDF_LOADER_IMG)
 
 .PHONY: clean-remote
 clean-remote: push-home
@@ -142,11 +145,11 @@ build-sel4cp:
 .PHONY: patch-sel4cp-sdk
 patch-sel4cp-sdk:
 	cp $(LUCY_LIBC) \
-		$(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/benchmark/lib/libc.a
+		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/benchmark/lib/libc.a
 	cp $(LUCY_LIBC) \
-		$(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/debug/lib/libc.a
+		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/debug/lib/libc.a
 	cp $(LUCY_LIBC) \
-		$(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/release/lib/libc.a
+		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/release/lib/libc.a
 
 .PHONY: build-sddf
 build-sddf: \
@@ -154,12 +157,21 @@ build-sddf: \
 	patch-sel4cp-sdk
 	make \
 		-C $(SDDF_SUBMODULE)/echo_server \
-		BUILD_DIR=$(SDDF_BUILD) \
-		SEL4CP_SDK=$(SEL4CP_SDK) \
+		BUILD_DIR=$(SDDF_BUILD_DIR) \
+		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
 
+# ==================================
+# Build
+# ==================================
 
+.PHONY: run
+run: \
+	run-sddf \
+
+.PHONY: run-sddf
+run-sddf: build-sddf
 
 
 
