@@ -177,8 +177,10 @@ run: \
 
 .PHONY: run-sddf
 run-sddf: build-sddf
-	# Copy the loader image onto the TS server.
+	# Copy the loader image to the TS server.
 	scp $(SDDF_LOADER_IMG) $(TS_USER_HOST):~/Downloads/sddf.img
-
+	# Run the loader image on the TS server.
+	ssh -t $(TS_USER_HOST) "\
+		bash -ilc 'mq.sh run -c \"something\" -l output -s imx8mm -f ~/Downloads/sddf.img' ; "
 
 
