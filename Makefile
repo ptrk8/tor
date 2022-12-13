@@ -9,6 +9,7 @@ SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
 SERVER_USER_HOST = patrick@vm_comp4961_ubuntu1804
 SERVER_REMOTE_DIR = ~/remote/$(shell hostname -s)/
+TS_USER_HOST = patrickh@login.trustworthy.systems
 
 SEL4CP_PYTHON_VENV_NAME = sel4cp_venv
 SEL4CP_PYTHON_VENV_PATH = $(SEL4CP_SUBMODULE)/$(SEL4CP_PYTHON_VENV_NAME)
@@ -166,13 +167,18 @@ build-sddf: \
 # Build
 # ==================================
 
+.PHONY: run-remote
+run-remote:
+	$(MAKE) remote MAKE_CMD="run"
+
 .PHONY: run
 run: \
 	run-sddf \
 
 .PHONY: run-sddf
 run-sddf: build-sddf
-
+	# Copy the loader image onto the TS server.
+	scp $(SDDF_LOADER_IMG) $(TS_USER_HOST):~/Downloads/sddf.img
 
 
 
