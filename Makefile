@@ -58,12 +58,13 @@ push-home:
 init: \
 	init-sel4cp \
 	init-sel4 \
+	init-sddf \
 
 # 1. Initialise locally.
 # 2. Then initialise remotely.
 # This is to ensure the local version of seL4 and seL4cp are consistent for rsync.
 .PHONY: init-remote
-init-remote: init push-home
+init-remote: push-home
 	ssh -t $(SERVER_USER_HOST) "\
 		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
 		zsh -ilc 'make init' ; "
@@ -96,6 +97,10 @@ fix-sel4:
 	rm -rf $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mm-evk
 	cp -r $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mq-evk \
 		  $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mm-evk
+
+.PHONY: init-sddf
+init-sddf:
+	# Nothing needs to be done for now.
 
 # ==================================
 # Build
