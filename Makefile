@@ -17,6 +17,7 @@ SEL4CP_PYTHON_REQUIREMENTS = $(SEL4CP_SUBMODULE)/requirements.txt
 # Generated Files
 # =================================
 SEL4CP_SDK = $(SEL4CP_SUBMODULE)/release
+SEL4CP_BUILD = $(SEL4CP_SUBMODULE)/build
 
 # =================================
 # Clean
@@ -26,6 +27,7 @@ SEL4CP_SDK = $(SEL4CP_SUBMODULE)/release
 clean:
 	rm -rf $(SEL4CP_PYTHON_VENV_PATH)
 	rm -rf $(SEL4CP_SDK)
+	rm -rf $(SEL4CP_BUILD)
 
 .PHONY: clean-remote
 clean-remote: push-home
@@ -38,12 +40,14 @@ clean-remote: push-home
 # =================================
 
 push-home:
-	# Make the directory on the remote if it doesn't exist already.
+	# Make the directory on the remote server if it doesn't exist already.
 	ssh -t $(SERVER_USER_HOST) "mkdir -p $(SERVER_REMOTE_DIR)$(PWD_DIR)"
 	# Sync our current directory with the remote.
 	rsync -a \
  			--delete \
  			--exclude "$(SEL4CP_PYTHON_VENV_NAME)" \
+ 			--exclude "build" \
+ 			--exclude "release" \
  			./ $(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)
 
 # ==================================
@@ -52,6 +56,15 @@ push-home:
 
 .PHONY: init
 init: init-sel4cp init-sel4 \
+
+# 1. Initialise locally.
+# 2. Then initialise remotely.
+# This is to ensure the local version of seL4 and seL4cp are consistent for rsync.
+.PHONY: init-remote
+init-remote: init push-home
+	ssh -t $(SERVER_USER_HOST) "\
+		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
+		zsh -ilc 'make init' ; "
 
 .PHONY: init-sel4cp
 init-sel4cp:
@@ -74,6 +87,13 @@ init-sel4cp:
 init-sel4:
 	cd $(SEL4_SUBMODULE) && \
 		  git checkout $(SEL4_COMMIT)
+	$(MAKE) fix-sel4
+
+.PHONY: fix-sel4
+fix-sel4:
+	rm -rf $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mm-evk
+	cp -r $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mq-evk \
+		  $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mm-evk
 
 # ==================================
 # Build
@@ -82,15 +102,15 @@ init-sel4:
 .PHONY: build
 build: build-sel4cp \
 
+.PHONY: build-remote
+build-remote: push-home
+	ssh -t $(SERVER_USER_HOST) "\
+		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
+		zsh -ilc 'make build' ; "
+
 # ==================================
 # Core Platform Build Steps
 # ==================================
-
-.PHONY: fix-sel4
-fix-sel4:
-	rm $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mm-evk
-	cp -r $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mq-evk \
-		  $(SEL4_SUBMODULE)/libsel4/sel4_plat_include/imx8mm-evk
 
 .PHONY: build-sel4cp
 build-sel4cp: fix-sel4
