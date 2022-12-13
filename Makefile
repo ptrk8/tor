@@ -2,6 +2,7 @@
 PWD_DIR = "$(shell basename $$(pwd))"
 SEL4_SUBMODULE = $(PWD)/seL4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
+SDDF_SUBMODULE = $(PWD)/sDDF
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
@@ -16,8 +17,10 @@ SEL4CP_PYTHON_REQUIREMENTS = $(SEL4CP_SUBMODULE)/requirements.txt
 # =================================
 # Generated Files
 # =================================
-SEL4CP_SDK = $(SEL4CP_SUBMODULE)/release
+
+SEL4CP_RELEASE = $(SEL4CP_SUBMODULE)/release
 SEL4CP_BUILD = $(SEL4CP_SUBMODULE)/build
+SEL4CP_SDK = $(SEL4CP_RELEASE)/sel4cp-sdk-1.2.6
 
 # =================================
 # Clean
@@ -26,7 +29,7 @@ SEL4CP_BUILD = $(SEL4CP_SUBMODULE)/build
 .PHONY: clean
 clean:
 	rm -rf $(SEL4CP_PYTHON_VENV_PATH)
-	rm -rf $(SEL4CP_SDK)
+	rm -rf $(SEL4CP_RELEASE)
 	rm -rf $(SEL4CP_BUILD)
 
 .PHONY: clean-remote
@@ -64,7 +67,7 @@ init: \
 # 2. Then initialise remotely.
 # This is to ensure the local version of seL4 and seL4cp are consistent for rsync.
 .PHONY: init-remote
-init-remote: push-home
+init-remote: fix-sel4 push-home
 	ssh -t $(SERVER_USER_HOST) "\
 		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
 		zsh -ilc 'make init' ; "
@@ -106,24 +109,30 @@ init-sddf:
 # Build
 # ==================================
 
-.PHONY: build
-build: build-sel4cp \
-
 .PHONY: build-remote
 build-remote: push-home
 	ssh -t $(SERVER_USER_HOST) "\
 		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
 		zsh -ilc 'make build' ; "
 
-# ==================================
-# Core Platform Build Steps
-# ==================================
+.PHONY: build
+build: \
+	build-sel4cp \
+	build-sddf \
 
 .PHONY: build-sel4cp
-build-sel4cp: fix-sel4
+build-sel4cp:
 	cd $(SEL4CP_SUBMODULE) && \
 		  $(SEL4CP_PYTHON_VENV_PYTHON) build_sdk.py --sel4="$(SEL4_SUBMODULE)"
 
+.PHONY: build-sddf
+build-sddf: build-sel4cp
+	make \
+		-C $(SDDF_SUBMODULE)/echo_server \
+		BUILD_DIR=build \
+		SEL4CP_SDK=$(SEL4CP_SDK) \
+		SEL4CP_BOARD=imx8mm \
+		SEL4CP_CONFIG=debug
 
 
 
