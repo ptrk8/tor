@@ -2,8 +2,8 @@
 	path = sel4cp
 	url = https://github.com/BreakawayConsulting/sel4cp.git
 [submodule "seL4"]
-	path = seL4
+	path = sel4
 	url = https://github.com/BreakawayConsulting/seL4.git
 [submodule "sDDF"]
-	path = sDDF
+	path = sddf
 	url = https://github.com/lucypa/sDDF.git

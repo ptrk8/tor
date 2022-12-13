@@ -1,9 +1,9 @@
 
 PWD_DIR = "$(shell basename $$(pwd))"
 RESOURCES_DIR = $(PWD)/resources
-SEL4_SUBMODULE = $(PWD)/seL4
+SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
-SDDF_SUBMODULE = $(PWD)/sDDF
+SDDF_SUBMODULE = $(PWD)/sddf
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
@@ -39,6 +39,7 @@ clean:
 	rm -rf $(SEL4CP_PYTHON_VENV_PATH)
 	rm -rf $(SEL4CP_RELEASE_DIR)
 	rm -rf $(SEL4CP_BUILD_DIR)
+	rm -rf $(SEL4CP_SDK_DIR)
 	rm -rf $(SDDF_BUILD_DIR)
 	rm -rf $(SDDF_LOADER_IMG)
 
