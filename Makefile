@@ -3,7 +3,8 @@ PWD_DIR = "$(shell basename $$(pwd))"
 RESOURCES_DIR = $(PWD)/resources
 SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
-SDDF_SUBMODULE = $(PWD)/sddf
+#SDDF_SUBMODULE = $(PWD)/sddf
+SDDF_SUBMODULE = $(PWD)/sddf-playground
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
