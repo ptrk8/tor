@@ -61,7 +61,7 @@ push-home:
 remote:
 	ssh -t $(SERVER_USER_HOST) "\
 		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
-		zsh -ilc 'make $(MAKE_COMMAND)' ; "
+		zsh -ilc 'make $(MAKE_CMD)' ; "
 
 # ==================================
 # Initialisation
@@ -78,9 +78,7 @@ init: \
 # This is to ensure the local version of seL4 and seL4cp are consistent for rsync.
 .PHONY: init-remote
 init-remote: fix-sel4 push-home
-	ssh -t $(SERVER_USER_HOST) "\
-		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
-		zsh -ilc 'make init' ; "
+	$(MAKE) remote MAKE_CMD="init"
 
 .PHONY: init-sel4cp
 init-sel4cp:
@@ -121,9 +119,7 @@ init-sddf:
 
 .PHONY: build-remote
 build-remote: push-home
-	ssh -t $(SERVER_USER_HOST) "\
-		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
-		zsh -ilc 'make build' ; "
+	$(MAKE) remote MAKE_CMD="build"
 
 .PHONY: build
 build: \
