@@ -1,5 +1,6 @@
 
 PWD_DIR = "$(shell basename $$(pwd))"
+RESOURCES_DIR = $(PWD)/resources
 SEL4_SUBMODULE = $(PWD)/seL4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
 SDDF_SUBMODULE = $(PWD)/sDDF
@@ -13,6 +14,9 @@ SEL4CP_PYTHON_VENV_NAME = sel4cp_venv
 SEL4CP_PYTHON_VENV_PATH = $(SEL4CP_SUBMODULE)/$(SEL4CP_PYTHON_VENV_NAME)
 SEL4CP_PYTHON_VENV_PYTHON = $(SEL4CP_PYTHON_VENV_PATH)/bin/python
 SEL4CP_PYTHON_REQUIREMENTS = $(SEL4CP_SUBMODULE)/requirements.txt
+SEL4CP_BOARD = imx8mm
+
+LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 
 # =================================
 # Generated Files
@@ -21,6 +25,8 @@ SEL4CP_PYTHON_REQUIREMENTS = $(SEL4CP_SUBMODULE)/requirements.txt
 SEL4CP_RELEASE = $(SEL4CP_SUBMODULE)/release
 SEL4CP_BUILD = $(SEL4CP_SUBMODULE)/build
 SEL4CP_SDK = $(SEL4CP_RELEASE)/sel4cp-sdk-1.2.6
+
+SDDF_BUILD = $(SDDF_SUBMODULE)/echo_server/build
 
 # =================================
 # Clean
@@ -58,7 +64,7 @@ push-home:
 # ==================================
 
 .PHONY: remote
-remote:
+remote: push-home
 	ssh -t $(SERVER_USER_HOST) "\
 		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
 		zsh -ilc 'make $(MAKE_CMD)' ; "
@@ -77,7 +83,7 @@ init: \
 # 2. Then initialise remotely.
 # This is to ensure the local version of seL4 and seL4cp are consistent for rsync.
 .PHONY: init-remote
-init-remote: fix-sel4 push-home
+init-remote: fix-sel4
 	$(MAKE) remote MAKE_CMD="init"
 
 .PHONY: init-sel4cp
@@ -118,7 +124,7 @@ init-sddf:
 # ==================================
 
 .PHONY: build-remote
-build-remote: push-home
+build-remote:
 	$(MAKE) remote MAKE_CMD="build"
 
 .PHONY: build
@@ -131,13 +137,26 @@ build-sel4cp:
 	cd $(SEL4CP_SUBMODULE) && \
 		  $(SEL4CP_PYTHON_VENV_PYTHON) build_sdk.py --sel4="$(SEL4_SUBMODULE)"
 
+# This patch is necessary since the sDDF expects a libc via the -lc linker flag
+# specified by Lucy.
+.PHONY: patch-sel4cp-sdk
+patch-sel4cp-sdk:
+	cp $(LUCY_LIBC) \
+		$(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/benchmark/lib/libc.a
+	cp $(LUCY_LIBC) \
+		$(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/debug/lib/libc.a
+	cp $(LUCY_LIBC) \
+		$(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/release/lib/libc.a
+
 .PHONY: build-sddf
-build-sddf: build-sel4cp
+build-sddf: \
+	build-sel4cp \
+	patch-sel4cp-sdk
 	make \
 		-C $(SDDF_SUBMODULE)/echo_server \
-		BUILD_DIR=build \
+		BUILD_DIR=$(SDDF_BUILD) \
 		SEL4CP_SDK=$(SEL4CP_SDK) \
-		SEL4CP_BOARD=imx8mm \
+		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
 
 
