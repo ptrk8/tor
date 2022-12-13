@@ -54,6 +54,16 @@ push-home:
  			./ $(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)
 
 # ==================================
+# Runs a Make command remotely.
+# ==================================
+
+.PHONY: remote
+remote:
+	ssh -t $(SERVER_USER_HOST) "\
+		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
+		zsh -ilc 'make $(MAKE_COMMAND)' ; "
+
+# ==================================
 # Initialisation
 # ==================================
 
