@@ -4,3 +4,6 @@
 [submodule "seL4"]
 	path = seL4
 	url = https://github.com/BreakawayConsulting/seL4.git
+[submodule "sDDF"]
+	path = sDDF
+	url = https://github.com/lucypa/sDDF.git

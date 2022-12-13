@@ -55,7 +55,9 @@ push-home:
 # ==================================
 
 .PHONY: init
-init: init-sel4cp init-sel4 \
+init: \
+	init-sel4cp \
+	init-sel4 \
 
 # 1. Initialise locally.
 # 2. Then initialise remotely.
