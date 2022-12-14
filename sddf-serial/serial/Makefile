@@ -75,7 +75,7 @@ depend dep: .depend
 
 include .depend
 
-.depend: $(LWIPFILES)
+.depend:
 	$(CC) $(CFLAGS) -MM $^ > .depend || rm -f .depend
 
 
