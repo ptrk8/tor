@@ -13,9 +13,17 @@ bool uart_init(
     return true;
 }
 
-void uart_put_char(uint8_t ch) {
+void uart_put_char(
+        uart_t *uart,
+        uint8_t ch
+) {
     while (!(*UART_REG(STAT) & STAT_TDRE)) {}
-    *UART_REG(TRANSMIT) = ch;
+    *UART_REG(UART_TRANSMIT_OFFSET) = ch;
 }
 
-
+//volatile uint32_t *uart_get_transmit_register(uart_t *uart) {
+//    return REG_PTR(
+//            uart->base_vaddr,
+//            UART_TRANSMIT_OFFSET
+//    );
+//}

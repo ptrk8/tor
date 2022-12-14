@@ -10,7 +10,9 @@
 #define UART_REG(x) ((volatile uint32_t *)(UART_BASE + (x)))
 #define STAT 0x98
 #define STAT_TDRE (1 << 14)
-#define TRANSMIT 0x40
+
+//#define REG_PTR(base, offset) ((volatile uint32_t *)((base) + (offset)))
+#define UART_TRANSMIT_OFFSET 0x40
 
 typedef struct uart uart_t;
 struct uart {
@@ -19,7 +21,7 @@ struct uart {
 };
 
 /**
- * Initialises UART.
+ * Initialises UART device.
  * @param uart
  * @param base_vaddr
  * @return True if successful and false otherwise.
@@ -29,8 +31,21 @@ bool uart_init(
         uintptr_t base_vaddr
 );
 
-void uart_put_char(uint8_t ch);
+/**
+ * Sends a character to UART device.
+ * @param uart
+ * @param ch
+ */
+void uart_put_char(
+        uart_t *uart,
+        uint8_t ch
+);
 
-
+///**
+// * Returns the transmit register.
+// * @param uart
+// * @return
+// */
+//volatile uint32_t *uart_get_transmit_register(uart_t *uart);
 
 
