@@ -159,6 +159,8 @@ build: \
 	build-sel4cp \
 	build-sddf \
 
+# Core Platform
+
 .PHONY: build-sel4cp
 build-sel4cp:
 	cd $(SEL4CP_SUBMODULE) && \
@@ -175,6 +177,8 @@ patch-sel4cp-sdk:
 	cp $(LUCY_LIBC) \
 		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/release/lib/libc.a
 
+# sDDF
+
 .PHONY: build-sddf
 build-sddf: \
 	build-sel4cp \
@@ -185,6 +189,8 @@ build-sddf: \
 		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
+
+# Serial Driver
 
 .PHONY: build-serial
 build-serial: \
