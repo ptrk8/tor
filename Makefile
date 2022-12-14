@@ -6,6 +6,7 @@ SEL4CP_SUBMODULE = $(PWD)/sel4cp
 #SDDF_SUBMODULE = $(PWD)/sddf
 SDDF_SUBMODULE = $(PWD)/sddf-playground
 SERIAL_SUBMODULE = $(PWD)/sddf-serial
+HELLO_SUBMODULE = $(PWD)/hello-world
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
@@ -23,20 +24,28 @@ LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 
 SDDF_SRC_DIR = $(SDDF_SUBMODULE)/echo_server
 SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
+HELLO_SRC_DIR = $(HELLO_SUBMODULE)
 
 # =================================
 # Generated Files
 # =================================
+
 # seL4CP
 SEL4CP_RELEASE_DIR = $(SEL4CP_SUBMODULE)/release
 SEL4CP_BUILD_DIR = $(SEL4CP_SUBMODULE)/build
 SEL4CP_SDK_DIR = $(SEL4CP_RELEASE_DIR)/sel4cp-sdk-1.2.6
+
 # sDDF
 SDDF_BUILD_DIR = $(SDDF_SRC_DIR)/build
 SDDF_LOADER_IMG = $(SDDF_BUILD_DIR)/loader.img
-# Serial
+
+# Serial Driver
 SERIAL_BUILD_DIR = $(SERIAL_SRC_DIR)/build
 SERIAL_LOADER_IMG = $(SERIAL_BUILD_DIR)/loader.img
+
+# Hello World
+HELLO_BUILD_DIR = $(HELLO_SRC_DIR)/build
+HELLO_LOADER_IMG = $(HELLO_BUILD_DIR)/loader.img
 
 # =================================
 # Clean
@@ -52,7 +61,8 @@ clean-remote: push-home
 clean: \
 	clean-sel4cp \
 	clean-sddf \
-	clean-serial
+	clean-serial \
+	clean-hello \
 
 .PHONY: clean-sel4cp
 clean-sel4cp:
@@ -70,6 +80,11 @@ clean-sddf:
 clean-serial:
 	rm -rf $(SERIAL_BUILD_DIR)
 	rm -rf $(SERIAL_LOADER_IMG)
+
+.PHONY: clean-hello
+clean-hello:
+	rm -rf $(HELLO_BUILD_DIR)
+	rm -rf $(HELLO_LOADER_IMG)
 
 # =================================
 # Push to remote servers
@@ -209,6 +224,21 @@ build-serial: \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
 
+# Hello World
+
+.PHONY: build-hello
+build-hello: \
+	build-sel4cp \
+	patch-sel4cp-sdk
+	# Create the build directory if it doesn't exist already.
+	mkdir -p $(HELLO_BUILD_DIR)
+	make \
+		-C $(HELLO_SRC_DIR) \
+		BUILD_DIR=$(HELLO_BUILD_DIR) \
+		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
+		SEL4CP_BOARD=$(SEL4CP_BOARD) \
+		SEL4CP_CONFIG=debug
+
 # ==================================
 # Run
 # ==================================
@@ -245,5 +275,17 @@ run-serial: build-serial
 	$(MAKE) run-img-on-mq \
 		MQ_BOARD=$(SEL4CP_BOARD) \
 		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
-		IMG_NAME="serial.img"
+		IMG_NAME="sddf-serial.img"
 
+# Hello World
+
+.PHONY: run-hello-remote
+run-hello-remote:
+	$(MAKE) remote MAKE_CMD="run-hello"
+
+.PHONY: run-hello
+run-hello: build-hello
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(SEL4CP_BOARD) \
+		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
+		IMG_NAME="hello-world.img"
