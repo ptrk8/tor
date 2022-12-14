@@ -10,18 +10,15 @@
 
 uintptr_t uart_base;
 
-void init(void)
-{
+void init(void) {
     sel4cp_dbg_puts("Hello world.\n");
 }
 
 seL4_MessageInfo_t
-protected(sel4cp_channel ch, sel4cp_msginfo msginfo)
-{
+protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {
     return sel4cp_msginfo_new(0, 0);
 }
 
-void notified(sel4cp_channel ch)
-{
+void notified(sel4cp_channel ch) {
 
 }

@@ -2,3 +2,4 @@
 .idea
 
 sel4cp_venv
+cmake-build-*
