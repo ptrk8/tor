@@ -32,8 +32,8 @@ SEL4CP_RELEASE_DIR = $(SEL4CP_SUBMODULE)/release
 SEL4CP_BUILD_DIR = $(SEL4CP_SUBMODULE)/build
 SEL4CP_SDK_DIR = $(SEL4CP_RELEASE_DIR)/sel4cp-sdk-1.2.6
 # sDDF
-SDDF_BUILD_DIR = $(SDDF_SUBMODULE)/echo_server/build
-SDDF_LOADER_IMG = $(SDDF_SUBMODULE)/echo_server/build/loader.img
+SDDF_BUILD_DIR = $(SDDF_SRC_DIR)/build
+SDDF_LOADER_IMG = $(SDDF_SRC_DIR)/build/loader.img
 # Serial
 SERIAL_BUILD_DIR = $(SERIAL_SRC_DIR)/build
 
@@ -41,20 +41,24 @@ SERIAL_BUILD_DIR = $(SERIAL_SRC_DIR)/build
 # Clean
 # =================================
 
-.PHONY: clean
-clean:
-	rm -rf $(SEL4CP_PYTHON_VENV_PATH)
-	rm -rf $(SEL4CP_RELEASE_DIR)
-	rm -rf $(SEL4CP_BUILD_DIR)
-	rm -rf $(SEL4CP_SDK_DIR)
-	rm -rf $(SDDF_BUILD_DIR)
-	rm -rf $(SDDF_LOADER_IMG)
-
 .PHONY: clean-remote
 clean-remote: push-home
 	ssh -t $(SERVER_USER_HOST) "\
 		cd $(SERVER_REMOTE_DIR)$(PWD_DIR) ; \
 		make clean ; "
+
+.PHONY: clean
+clean: \
+	clean-sddf
+	rm -rf $(SEL4CP_PYTHON_VENV_PATH)
+	rm -rf $(SEL4CP_RELEASE_DIR)
+	rm -rf $(SEL4CP_BUILD_DIR)
+	rm -rf $(SEL4CP_SDK_DIR)
+
+.PHONY: clean-sddf
+clean-sddf:
+	rm -rf $(SDDF_BUILD_DIR)
+	rm -rf $(SDDF_LOADER_IMG)
 
 # =================================
 # Push to remote servers
@@ -165,7 +169,7 @@ build-sddf: \
 	build-sel4cp \
 	patch-sel4cp-sdk
 	make \
-		-C $(SDDF_SUBMODULE)/echo_server \
+		-C $(SDDF_SRC_DIR) \
 		BUILD_DIR=$(SDDF_BUILD_DIR) \
 		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
@@ -177,7 +181,7 @@ build-serial: \
 	patch-sel4cp-sdk
 	make \
 		-C $(SERIAL_SRC_DIR) \
-		BUILD_DIR=$(SDDF_BUILD_DIR) \
+		BUILD_DIR=$(SERIAL_BUILD_DIR) \
 		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
