@@ -201,6 +201,14 @@ build-serial: \
 # Run
 # ==================================
 
+.PHONY: run-img-on-mq
+run-img-on-mq:
+	# Copy the loader image to the TS server.
+	scp $(PATH_TO_LOADER_IMG) $(TS_USER_HOST):~/Downloads/$(IMG_NAME)
+	# Run the loader image on the TS server.
+	ssh -t $(TS_USER_HOST) "\
+		bash -ilc 'mq.sh run -c \"something\" -l output -s imx8mm -f ~/Downloads/$(IMG_NAME)' ; "
+
 # sDDF
 
 .PHONY: run-sddf-remote
@@ -209,11 +217,9 @@ run-sddf-remote:
 
 .PHONY: run-sddf
 run-sddf: build-sddf
-	# Copy the loader image to the TS server.
-	scp $(SDDF_LOADER_IMG) $(TS_USER_HOST):~/Downloads/sddf.img
-	# Run the loader image on the TS server.
-	ssh -t $(TS_USER_HOST) "\
-		bash -ilc 'mq.sh run -c \"something\" -l output -s imx8mm -f ~/Downloads/sddf.img' ; "
+	$(MAKE) run-img-on-mq \
+		PATH_TO_LOADER_IMG=$(SDDF_LOADER_IMG) \
+		IMG_NAME="sddf.img"
 
 # Serial Driver
 
@@ -223,9 +229,7 @@ run-serial-remote:
 
 .PHONY: run-serial
 run-serial: build-serial
-	# Copy the loader image to the TS server.
-	scp $(SERIAL_LOADER_IMG) $(TS_USER_HOST):~/Downloads/serial.img
-	# Run the loader image on the TS server.
-	ssh -t $(TS_USER_HOST) "\
-		bash -ilc 'mq.sh run -c \"something\" -l output -s imx8mm -f ~/Downloads/serial.img' ; "
+	$(MAKE) run-img-on-mq \
+		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
+		IMG_NAME="serial.img"
 
