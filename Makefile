@@ -254,8 +254,6 @@ build-serial: \
 build-hello: \
 	build-sel4cp \
 	patch-sel4cp-sdk
-	# Create the build directory if it doesn't exist already.
-	mkdir -p $(HELLO_BUILD_DIR)
 	make \
 		-C $(HELLO_SRC_DIR) \
 		BUILD_DIR=$(HELLO_BUILD_DIR) \

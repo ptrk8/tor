@@ -6,7 +6,7 @@
 #pragma once
 
 #define UART_REG(x) ((volatile uint32_t *)(UART_BASE + (x)))
-#define UART_BASE 0x5000000 //0x30890000 in hardware on imx8mm. 
+#define UART_BASE 0x5000000 //0x30890000 in hardware on imx8mm.
 #define STAT 0x98
 #define TRANSMIT 0x40
 #define STAT_TDRE (1 << 14)
@@ -21,21 +21,21 @@
 #define unlikely(x) (!!(x))
 #endif
 
-static void
-putC(uint8_t ch)
-{
-    while (!(*UART_REG(STAT) & STAT_TDRE)) { }
-    *UART_REG(TRANSMIT) = ch;
-}
-
-static void
-print(const char *s)
-{
-    while (*s) {
-        putC(*s);
-        s++;
-    }
-}
+//static void
+//putC(uint8_t ch)
+//{
+//    while (!(*UART_REG(STAT) & STAT_TDRE)) { }
+//    *UART_REG(TRANSMIT) = ch;
+//}
+//
+//static void
+//print(const char *s)
+//{
+//    while (*s) {
+//        putC(*s);
+//        s++;
+//    }
+//}
 
 static char
 hexchar(unsigned int v)

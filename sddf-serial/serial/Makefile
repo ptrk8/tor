@@ -45,7 +45,11 @@ CFLAGS += -I$(BOARD_DIR)/include \
 SERIAL_OBJS := serial.o
 
 .PHONY: all
-all: $(IMAGE_FILE)
+all: directories $(IMAGE_FILE)
+
+# Create build directory
+directories:
+	mkdir -p $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: %.c Makefile
 	$(CC) -c $(CFLAGS) $< -o $@
