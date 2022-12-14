@@ -168,18 +168,19 @@ ifeq ("$(wildcard $(SEL4CP_SDK_DIR))","")
 	cd $(SEL4CP_SUBMODULE) && \
 		$(SEL4CP_PYTHON_VENV_PYTHON) build_sdk.py --sel4="$(SEL4_SUBMODULE)"
 else
-	echo "No need to build Core Platform since SDK already exists"
+	@echo "No need to build Core Platform since SDK already exists"
 endif
 
 # This patch is necessary since the sDDF expects a libc via the -lc linker flag
 # specified by Lucy.
 .PHONY: patch-sel4cp-sdk
 patch-sel4cp-sdk:
-	cp $(LUCY_LIBC) \
+	# The -n ensures we don't overwrite an existing file.
+	cp -n $(LUCY_LIBC) \
 		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/benchmark/lib/libc.a
-	cp $(LUCY_LIBC) \
+	cp -n $(LUCY_LIBC) \
 		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/debug/lib/libc.a
-	cp $(LUCY_LIBC) \
+	cp -n $(LUCY_LIBC) \
 		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/release/lib/libc.a
 
 # sDDF
