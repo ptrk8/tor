@@ -163,8 +163,13 @@ build: \
 
 .PHONY: build-sel4cp
 build-sel4cp:
+# Only build the Core Platform if the SDK doesn't exist already.
+ifeq ("$(wildcard $(SEL4CP_SDK_DIR))","")
 	cd $(SEL4CP_SUBMODULE) && \
-		  $(SEL4CP_PYTHON_VENV_PYTHON) build_sdk.py --sel4="$(SEL4_SUBMODULE)"
+		$(SEL4CP_PYTHON_VENV_PYTHON) build_sdk.py --sel4="$(SEL4_SUBMODULE)"
+else
+	echo "No need to build Core Platform since SDK already exists"
+endif
 
 # This patch is necessary since the sDDF expects a libc via the -lc linker flag
 # specified by Lucy.
