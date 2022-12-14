@@ -51,6 +51,11 @@ HELLO_LOADER_IMG = $(HELLO_BUILD_DIR)/loader.img
 # Configure CLion
 # =================================
 
+# Configures environment for CLion.
+.PHONY: clion
+clion: \
+	sync-sel4cp-build-artifacts
+
 # Run this after you have built sel4cp.
 # This copies the build artifacts from the remote machine to the local machine.
 # The build artifacts will be used for CLion's Intellisense.
