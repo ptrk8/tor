@@ -201,13 +201,11 @@ build-serial: \
 # Run
 # ==================================
 
-.PHONY: run-remote
-run-remote:
-	$(MAKE) remote MAKE_CMD="run"
+# sDDF
 
-.PHONY: run
-run: \
-	run-sddf \
+.PHONY: run-sddf-remote
+run-sddf-remote:
+	$(MAKE) remote MAKE_CMD="run-sddf"
 
 .PHONY: run-sddf
 run-sddf: build-sddf
@@ -216,6 +214,12 @@ run-sddf: build-sddf
 	# Run the loader image on the TS server.
 	ssh -t $(TS_USER_HOST) "\
 		bash -ilc 'mq.sh run -c \"something\" -l output -s imx8mm -f ~/Downloads/sddf.img' ; "
+
+# Serial Driver
+
+.PHONY: run-serial-remote
+run-serial-remote:
+	$(MAKE) remote MAKE_CMD="run-serial"
 
 .PHONY: run-serial
 run-serial: build-serial
