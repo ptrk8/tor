@@ -207,7 +207,7 @@ run-img-on-mq:
 	scp $(PATH_TO_LOADER_IMG) $(TS_USER_HOST):~/Downloads/$(IMG_NAME)
 	# Run the loader image on the TS server.
 	ssh -t $(TS_USER_HOST) "\
-		bash -ilc 'mq.sh run -c \"something\" -l output -s imx8mm -f ~/Downloads/$(IMG_NAME)' ; "
+		bash -ilc 'mq.sh run -c \"something\" -l output -s $(MQ_BOARD) -f ~/Downloads/$(IMG_NAME)' ; "
 
 # sDDF
 
@@ -218,6 +218,7 @@ run-sddf-remote:
 .PHONY: run-sddf
 run-sddf: build-sddf
 	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(SEL4CP_BOARD) \
 		PATH_TO_LOADER_IMG=$(SDDF_LOADER_IMG) \
 		IMG_NAME="sddf.img"
 
@@ -230,6 +231,7 @@ run-serial-remote:
 .PHONY: run-serial
 run-serial: build-serial
 	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(SEL4CP_BOARD) \
 		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
 		IMG_NAME="serial.img"
 
