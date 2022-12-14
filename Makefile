@@ -166,7 +166,7 @@ build-sddf: \
 		SEL4CP_CONFIG=debug
 
 # ==================================
-# Build
+# Run
 # ==================================
 
 .PHONY: run-remote
