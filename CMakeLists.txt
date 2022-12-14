@@ -16,6 +16,7 @@ target_include_directories(lib_sel4cp_zcu102 INTERFACE ${CMAKE_SOURCE_DIR}/sel4c
 
 add_subdirectory(sddf-serial/)
 add_subdirectory(hello-world/)
+add_subdirectory(sel4cp-workshop/)
 
 
 

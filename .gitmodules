@@ -7,3 +7,6 @@
 [submodule "sDDF"]
 	path = sddf
 	url = https://github.com/lucypa/sDDF.git
+[submodule "sel4cp-workshop"]
+	path = sel4cp-workshop
+	url = git@gitlab.com:honours1/courses/comp4961/sel4cp-workshop.git
