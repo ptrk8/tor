@@ -44,7 +44,8 @@ CFLAGS += -I$(BOARD_DIR)/include \
 
 ETH_OBJS := eth.o
 
-all: directories $(IMAGE_FILE)
+.PHONY: all
+all: $(IMAGE_FILE)
 
 $(BUILD_DIR)/%.o: %.c Makefile
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -58,24 +59,11 @@ $(BUILD_DIR)/eth.elf: $(addprefix $(BUILD_DIR)/, $(ETH_OBJS))
 $(IMAGE_FILE) $(REPORT_FILE): $(addprefix $(BUILD_DIR)/, $(IMAGES)) eth.system
 	$(SEL4CP_TOOL) eth.system --search-path $(BUILD_DIR) --board $(SEL4CP_BOARD) --config $(SEL4CP_CONFIG) -o $(IMAGE_FILE) -r $(REPORT_FILE)
 
-.PHONY: all depend compile clean
-
 %.o:
 	$(CC) $(CFLAGS) -c $(@:.o=.c) -o $@
 
-# Make the Directories
-directories:
-	$(info $(shell mkdir -p $(BUILD_DIR)/benchmark))	\
-
+.PHONY: clean
 clean:
 	rm -f *.o *.elf .depend*
 	find . -name \*.o |xargs --no-run-if-empty rm
-
-depend dep: .depend
-
-include .depend
-
-.depend:
-	$(CC) $(CFLAGS) -MM $^ > .depend || rm -f .depend
-
 

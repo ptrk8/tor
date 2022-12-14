@@ -18,7 +18,7 @@ void init(void)
 seL4_MessageInfo_t
 protected(sel4cp_channel ch, sel4cp_msginfo msginfo)
 {
-
+    return sel4cp_msginfo_new(0, 0);
 }
 
 void notified(sel4cp_channel ch)
