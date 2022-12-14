@@ -5,7 +5,7 @@
 
 #include <sel4cp.h>
 #include <sel4/sel4.h>
-#include "eth.h"
+#include "serial.h"
 #include "util.h"
 
 uintptr_t uart_base;
