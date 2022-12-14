@@ -27,7 +27,7 @@ SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
 HELLO_SRC_DIR = $(HELLO_SUBMODULE)
 
 # =================================
-# Generated Files
+# Build artifacts
 # =================================
 
 # seL4CP
