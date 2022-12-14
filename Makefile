@@ -1,12 +1,14 @@
 
 PWD_DIR = "$(shell basename $$(pwd))"
 RESOURCES_DIR = $(PWD)/resources
+
 SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
 #SDDF_SUBMODULE = $(PWD)/sddf
 SDDF_SUBMODULE = $(PWD)/sddf-playground
 SERIAL_SUBMODULE = $(PWD)/sddf-serial
 HELLO_SUBMODULE = $(PWD)/hello-world
+WORKSHOP_SUBMODULE = $(PWD)/sel4cp-workshop
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
@@ -25,6 +27,7 @@ LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 SDDF_SRC_DIR = $(SDDF_SUBMODULE)/echo_server
 SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
 HELLO_SRC_DIR = $(HELLO_SUBMODULE)
+WORKSHOP_SRC_DIR = $(WORKSHOP_SUBMODULE)/workshop
 
 # =================================
 # Build artifacts
@@ -46,6 +49,9 @@ SERIAL_LOADER_IMG = $(SERIAL_BUILD_DIR)/loader.img
 # Hello World
 HELLO_BUILD_DIR = $(HELLO_SRC_DIR)/build
 HELLO_LOADER_IMG = $(HELLO_BUILD_DIR)/loader.img
+
+# Workshop
+WORKSHOP_BUILD_DIR = $(WORKSHOP_SRC_DIR)/build
 
 # =================================
 # Configure CLion
@@ -87,6 +93,7 @@ clean: \
 	clean-sddf \
 	clean-serial \
 	clean-hello \
+	clean-workshop \
 
 .PHONY: clean-sel4cp
 clean-sel4cp:
@@ -109,6 +116,10 @@ clean-serial:
 clean-hello:
 	rm -rf $(HELLO_BUILD_DIR)
 	rm -rf $(HELLO_LOADER_IMG)
+
+.PHONY: clean-workshop
+clean-workshop:
+	rm -rf $(WORKSHOP_BUILD_DIR)
 
 # =================================
 # Push to remote servers
@@ -261,6 +272,15 @@ build-hello: \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
 
+# Workshop
+
+.PHONY: build-workshop
+build-workshop:
+	$(MAKE) \
+		-C $(WORKSHOP_SUBMODULE) \
+		build-part3 \
+		PWD=$(WORKSHOP_SUBMODULE)
+
 # ==================================
 # Run
 # ==================================
@@ -311,3 +331,12 @@ run-hello: build-hello
 		MQ_BOARD=$(SEL4CP_BOARD) \
 		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
 		IMG_NAME="hello-world.img"
+
+# Workshop
+
+.PHONY: run-workshop
+run-workshop:
+	$(MAKE) \
+		-C $(WORKSHOP_SUBMODULE) \
+		run-part3 \
+		PWD=$(WORKSHOP_SUBMODULE)
