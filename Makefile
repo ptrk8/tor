@@ -48,6 +48,25 @@ HELLO_BUILD_DIR = $(HELLO_SRC_DIR)/build
 HELLO_LOADER_IMG = $(HELLO_BUILD_DIR)/loader.img
 
 # =================================
+# Configure CLion
+# =================================
+
+# Run this after you have built sel4cp.
+# This copies the build artifacts from the remote machine to the local machine.
+# The build artifacts will be used for CLion's Intellisense.
+# The header files we are interested in are in: sel4cp/release/sel4cp-sdk-1.2.6/board/imx8mm/debug/include
+.PHONY: sync-sel4cp-build-artifacts
+sync-sel4cp-build-artifacts:
+	rsync \
+		-a \
+		--delete \
+		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp/release/ $(SEL4CP_RELEASE_DIR)
+	rsync \
+		-a \
+		--delete \
+		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp/build/ $(SEL4CP_BUILD_DIR)
+
+# =================================
 # Clean
 # =================================
 
