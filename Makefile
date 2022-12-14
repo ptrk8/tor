@@ -5,6 +5,7 @@ SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
 #SDDF_SUBMODULE = $(PWD)/sddf
 SDDF_SUBMODULE = $(PWD)/sddf-playground
+SERIAL_SUBMODULE = $(PWD)/sddf-serial
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
@@ -20,6 +21,9 @@ SEL4CP_BOARD = imx8mm
 
 LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 
+SDDF_SRC_DIR = $(SDDF_SUBMODULE)/echo_server
+SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
+
 # =================================
 # Generated Files
 # =================================
@@ -30,6 +34,8 @@ SEL4CP_SDK_DIR = $(SEL4CP_RELEASE_DIR)/sel4cp-sdk-1.2.6
 # sDDF
 SDDF_BUILD_DIR = $(SDDF_SUBMODULE)/echo_server/build
 SDDF_LOADER_IMG = $(SDDF_SUBMODULE)/echo_server/build/loader.img
+# Serial
+SERIAL_BUILD_DIR = $(SERIAL_SRC_DIR)/build
 
 # =================================
 # Clean
@@ -160,6 +166,17 @@ build-sddf: \
 	patch-sel4cp-sdk
 	make \
 		-C $(SDDF_SUBMODULE)/echo_server \
+		BUILD_DIR=$(SDDF_BUILD_DIR) \
+		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
+		SEL4CP_BOARD=$(SEL4CP_BOARD) \
+		SEL4CP_CONFIG=debug
+
+.PHONY: build-serial
+build-serial: \
+	build-sel4cp \
+	patch-sel4cp-sdk
+	make \
+		-C $(SERIAL_SRC_DIR) \
 		BUILD_DIR=$(SDDF_BUILD_DIR) \
 		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
