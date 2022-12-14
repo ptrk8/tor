@@ -3,24 +3,20 @@
 #include <sel4/sel4.h>
 #include "serial.h"
 #include "util.h"
+#include "uart.h"
 
 uintptr_t uart_base;
 
-void put_char(uint8_t ch) {
-    while (!(*UART_REG(STAT) & STAT_TDRE)) {}
-    *UART_REG(TRANSMIT) = ch;
-}
-
-void print(const char *s) {
-    while (*s) {
-        put_char(*s);
-        s++;
+void serial_write(const char *str) {
+    while (*str) {
+        uart_put_char(*str);
+        str++;
     }
 }
 
 void init(void) {
-    print("Hello world again.\n");
-    sel4cp_dbg_puts("Hello world.\n");
+    serial_write("Hello world.\n");
+//    sel4cp_dbg_puts("Hello world.\n");
 }
 
 seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {
