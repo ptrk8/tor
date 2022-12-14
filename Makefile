@@ -33,9 +33,10 @@ SEL4CP_BUILD_DIR = $(SEL4CP_SUBMODULE)/build
 SEL4CP_SDK_DIR = $(SEL4CP_RELEASE_DIR)/sel4cp-sdk-1.2.6
 # sDDF
 SDDF_BUILD_DIR = $(SDDF_SRC_DIR)/build
-SDDF_LOADER_IMG = $(SDDF_SRC_DIR)/build/loader.img
+SDDF_LOADER_IMG = $(SDDF_BUILD_DIR)/loader.img
 # Serial
 SERIAL_BUILD_DIR = $(SERIAL_SRC_DIR)/build
+SERIAL_LOADER_IMG = $(SERIAL_BUILD_DIR)/loader.img
 
 # =================================
 # Clean
@@ -49,7 +50,12 @@ clean-remote: push-home
 
 .PHONY: clean
 clean: \
-	clean-sddf
+	clean-sel4cp \
+	clean-sddf \
+	clean-serial
+
+.PHONY: clean-sel4cp
+clean-sel4cp:
 	rm -rf $(SEL4CP_PYTHON_VENV_PATH)
 	rm -rf $(SEL4CP_RELEASE_DIR)
 	rm -rf $(SEL4CP_BUILD_DIR)
@@ -59,6 +65,11 @@ clean: \
 clean-sddf:
 	rm -rf $(SDDF_BUILD_DIR)
 	rm -rf $(SDDF_LOADER_IMG)
+
+.PHONY: clean-serial
+clean-serial:
+	rm -rf $(SERIAL_BUILD_DIR)
+	rm -rf $(SERIAL_LOADER_IMG)
 
 # =================================
 # Push to remote servers
@@ -206,4 +217,11 @@ run-sddf: build-sddf
 	ssh -t $(TS_USER_HOST) "\
 		bash -ilc 'mq.sh run -c \"something\" -l output -s imx8mm -f ~/Downloads/sddf.img' ; "
 
+.PHONY: run-serial
+run-serial: build-serial
+	# Copy the loader image to the TS server.
+	scp $(SERIAL_LOADER_IMG) $(TS_USER_HOST):~/Downloads/serial.img
+	# Run the loader image on the TS server.
+	ssh -t $(TS_USER_HOST) "\
+		bash -ilc 'mq.sh run -c \"something\" -l output -s imx8mm -f ~/Downloads/serial.img' ; "
 

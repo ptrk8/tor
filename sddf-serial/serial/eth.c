@@ -12,7 +12,7 @@ uintptr_t uart_base;
 
 void init(void)
 {
-
+    sel4cp_dbg_puts("Hello world.\n");
 }
 
 seL4_MessageInfo_t
