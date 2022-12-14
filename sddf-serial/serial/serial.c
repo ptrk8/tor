@@ -1,11 +1,12 @@
 
-#include <sel4cp.h>
-#include <sel4/sel4.h>
 #include "serial.h"
 #include "util.h"
-#include "uart.h"
 
-uintptr_t uart_base;
+/* This will be automatically populated by the seL4CP tool. */
+uintptr_t uart_base_vaddr;
+
+/* Global UART device. */
+uart_t uart = {};
 
 void serial_write(const char *str) {
     while (*str) {
@@ -15,8 +16,12 @@ void serial_write(const char *str) {
 }
 
 void init(void) {
+    sel4cp_dbg_puts("Starting serial.c.\n");
     serial_write("Hello world.\n");
-//    sel4cp_dbg_puts("Hello world.\n");
+
+    bool is_success = uart_init(&uart, uart_base_vaddr);
+//    assert(is_success);
+    sel4cp_dbg_puts("Successfully initialise uart device.\n");
 }
 
 seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {

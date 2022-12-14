@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <system>
-    <memory_region name="uart" size="0x10_000" phys_addr="0x30890000" />
-    <protection_domain name="serial" priority="101" budget="160" period="300" pp="true">
-        <program_image path="serial.elf" />
-        <map mr="uart" vaddr="0x5_000_000" perms="rw" cached="false" setvar_vaddr="uart_base" />
+    <!-- We create in a 4K page of physical memory at 0x30890000 -->
+    <memory_region
+            name="uart"
+            size="0x10_000"
+            phys_addr="0x30890000"/>
+    <protection_domain
+            name="serial"
+            priority="101"
+            budget="160"
+            period="300"
+            pp="true">
+        <program_image path="serial.elf"/>
+        <!-- We map our physical memory to the virtual address at 0x5_000_000 -->
+        <map
+                mr="uart"
+                vaddr="0x5_000_000"
+                perms="rw"
+                cached="false"
+                setvar_vaddr="uart_base_vaddr"/>
     </protection_domain>
 </system>
 
