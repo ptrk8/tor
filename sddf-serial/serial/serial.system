@@ -19,6 +19,7 @@
                 perms="rw"
                 cached="false"
                 setvar_vaddr="uart_base_vaddr"/>
+<!--        <irq irq="59" id="1" />-->
     </protection_domain>
 </system>
 

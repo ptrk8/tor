@@ -10,6 +10,19 @@
 #define UART_REG(x) ((volatile uint32_t *)(UART_BASE + (x)))
 #define STAT 0x98
 #define STAT_TDRE (1 << 14)
+//
+//#define BIT(n) (1ul<<(n))
+//
+//#define UINTP       0x0030 /* interrupt pending */
+//#define UINTSP      0x0034 /* interrupt source pending */
+//#define UINTM       0x0038 /* interrupt mask *//* INTP, INTSP, INTM */
+//
+//#define INT_MODEM BIT(3)
+//#define INT_TX    BIT(2)
+//#define INT_ERR   BIT(1)
+//#define INT_RX    BIT(0)
+//
+//#define REG_PTR(base, offset) ((volatile uint32_t *)((base) + (offset)))
 
 //#define REG_PTR(base, offset) ((volatile uint32_t *)((base) + (offset)))
 #define UART_TRANSMIT_OFFSET 0x40

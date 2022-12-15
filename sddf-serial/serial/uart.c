@@ -9,7 +9,12 @@ bool uart_init(
     }
     /* Save `base_vaddr`. */
     uart->base_vaddr = base_vaddr;
-    /* Return true for successfuly initialisation. */
+
+    /* Enable RX IRQ */
+//    *REG_PTR(uart->base_vaddr, UINTM) = ~INT_RX;
+//    *REG_PTR(uart->base_vaddr, UINTP) = INT_RX | INT_TX | INT_ERR | INT_MODEM;
+
+    /* Return true for successful initialisation. */
     return true;
 }
 
