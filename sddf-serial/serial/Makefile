@@ -45,6 +45,7 @@ CFLAGS += -I$(BOARD_DIR)/include \
 SERIAL_OBJS := serial.o \
 				uart.o \
 				imx_uart_regs.o \
+				imx_uart.o \
 
 .PHONY: all
 all: directories $(IMAGE_FILE)

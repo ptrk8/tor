@@ -9,6 +9,7 @@ uintptr_t uart_base_vaddr;
 
 /* Global UART device. */
 uart_t uart = {};
+imx_uart_t imx_uart = {};
 
 void serial_write(const char *str) {
     while (*str) {
@@ -21,9 +22,11 @@ void init(void) {
     sel4cp_dbg_puts("Starting serial.c.\n");
     serial_write("Hello world.\n");
 
-    bool is_success = uart_init(&uart, uart_base_vaddr);
+//    bool is_success = uart_init(&uart, uart_base_vaddr);
+    bool is_success = imx_uart_init(&imx_uart, uart_base_vaddr);
 //    assert(is_success);
     sel4cp_dbg_puts("Successfully initialise uart device.\n");
+
 }
 
 seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {

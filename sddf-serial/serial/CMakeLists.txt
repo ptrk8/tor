@@ -30,3 +30,13 @@ target_link_libraries(
         lib_sel4cp_imx8mm
         lib_imx_uart_regs
 )
+
+add_library(lib_imx_uart imx_uart.c)
+target_include_directories(lib_imx_uart PUBLIC include)
+target_link_libraries(
+        lib_imx_uart
+        lib_sel4cp_imx8mm
+        lib_imx_uart_regs
+)
+
+
