@@ -38,8 +38,9 @@ void uart_put_char(
         uart_t *uart,
         uint8_t ch
 ) {
-    while (!(*UART_REG(STAT) & STAT_TDRE)) {}
-    *UART_REG(UART_TRANSMIT_OFFSET) = ch;
+    /* Lucy's code. */
+//    while (!(*UART_REG(STAT) & STAT_TDRE)) {}
+//    *UART_REG(UART_TRANSMIT_OFFSET) = ch;
 }
 
 //volatile uint32_t *uart_get_transmit_register(uart_t *uart) {
