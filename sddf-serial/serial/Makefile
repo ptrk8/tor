@@ -42,7 +42,9 @@ REPORT_FILE = $(BUILD_DIR)/report.txt
 CFLAGS += -I$(BOARD_DIR)/include \
 	-Iinclude
 
-SERIAL_OBJS := serial.o uart.o
+SERIAL_OBJS := serial.o \
+				uart.o \
+				imx_uart_regs.o \
 
 .PHONY: all
 all: directories $(IMAGE_FILE)

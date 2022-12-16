@@ -10,9 +10,25 @@ bool uart_init(
     /* Save `base_vaddr`. */
     uart->base_vaddr = base_vaddr;
 
-    /* Enable RX IRQ */
-//    *REG_PTR(uart->base_vaddr, UINTM) = ~INT_RX;
-//    *REG_PTR(uart->base_vaddr, UINTP) = INT_RX | INT_TX | INT_ERR | INT_MODEM;
+    imx_uart_regs_t *regs = imx_uart_regs_init(base_vaddr);
+
+    /* Software reset */
+    regs->cr2 &= ~UART_CR2_SRST;
+    while (!(regs->cr2 & UART_CR2_SRST));
+
+    /* Line configuration */
+    serial_configure(regs, 115200, 8, PARITY_NONE, 1);
+
+//     /* Enable the UART */
+//    regs->cr1 |= UART_CR1_UARTEN;                /* Enable The uart.                  */
+//    regs->cr2 |= UART_CR2_RXEN | UART_CR2_TXEN;  /* RX/TX enable                      */
+//    regs->cr2 |= UART_CR2_IRTS;                  /* Ignore RTS                        */
+//    regs->cr3 |= UART_CR3_RXDMUXDEL;             /* Configure the RX MUX              */
+//    /* Initialise the receiver interrupt.                                             */
+//    regs->cr1 &= ~UART_CR1_RRDYEN;               /* Disable recv interrupt.           */
+//    regs->fcr &= ~UART_FCR_RXTL_MASK;            /* Clear the rx trigger level value. */
+//    regs->fcr |= UART_FCR_RXTL(1);               /* Set the rx tigger level to 1.     */
+//    regs->cr1 |= UART_CR1_RRDYEN;                /* Enable recv interrupt.            */
 
     /* Return true for successful initialisation. */
     return true;
