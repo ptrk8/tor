@@ -340,3 +340,20 @@ run-workshop:
 		-C $(WORKSHOP_SUBMODULE) \
 		run-part3 \
 		PWD=$(WORKSHOP_SUBMODULE)
+
+# ==================================
+# Machine Queue
+# ==================================
+
+.PHONY: mq-getlock
+mq-getlock:
+	ssh -t $(TS_USER_HOST) "\
+		bash -ilc 'mq.sh sem -f -signal $(SYSTEM)' ; "
+
+.PHONY: mq-getlock-imx8mm
+mq-getlock-imx8mm:
+	$(MAKE) mq-getlock SYSTEM="imx8mm"
+
+
+
+
