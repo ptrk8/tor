@@ -4,8 +4,8 @@ RESOURCES_DIR = $(PWD)/resources
 
 SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
-#SDDF_SUBMODULE = $(PWD)/sddf
-SDDF_SUBMODULE = $(PWD)/sddf-playground
+SDDF_SUBMODULE = $(PWD)/sddf
+PLAYGROUND_SUBMODULE = $(PWD)/sddf-playground
 SERIAL_SUBMODULE = $(PWD)/sddf-serial
 HELLO_SUBMODULE = $(PWD)/hello-world
 WORKSHOP_SUBMODULE = $(PWD)/sel4cp-workshop
@@ -25,6 +25,7 @@ SEL4CP_BOARD = imx8mm
 LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 
 SDDF_SRC_DIR = $(SDDF_SUBMODULE)/echo_server
+PLAYGROUND_SRC_DIR = $(PLAYGROUND_SUBMODULE)/echo_server
 SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
 HELLO_SRC_DIR = $(HELLO_SUBMODULE)
 WORKSHOP_SRC_DIR = $(WORKSHOP_SUBMODULE)/workshop
@@ -41,6 +42,10 @@ SEL4CP_SDK_DIR = $(SEL4CP_RELEASE_DIR)/sel4cp-sdk-1.2.6
 # sDDF
 SDDF_BUILD_DIR = $(SDDF_SRC_DIR)/build
 SDDF_LOADER_IMG = $(SDDF_BUILD_DIR)/loader.img
+
+# Playground
+PLAYGROUND_BUILD_DIR = $(PLAYGROUND_SRC_DIR)/build
+PLAYGROUND_LOADER_IMG = $(PLAYGROUND_BUILD_DIR)/loader.img
 
 # Serial Driver
 SERIAL_BUILD_DIR = $(SERIAL_SRC_DIR)/build
@@ -246,6 +251,19 @@ build-sddf: \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
 
+# Playground
+
+.PHONY: build-playground
+build-playground: \
+	build-sel4cp \
+	patch-sel4cp-sdk
+	make \
+		-C $(PLAYGROUND_SRC_DIR) \
+		BUILD_DIR=$(PLAYGROUND_BUILD_DIR) \
+		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
+		SEL4CP_BOARD=$(SEL4CP_BOARD) \
+		SEL4CP_CONFIG=debug
+
 # Serial Driver
 
 .PHONY: build-serial
@@ -305,6 +323,19 @@ run-sddf: build-sddf
 		MQ_BOARD=$(SEL4CP_BOARD) \
 		PATH_TO_LOADER_IMG=$(SDDF_LOADER_IMG) \
 		IMG_NAME="sddf.img"
+
+# Playground
+
+.PHONY: run-playground-remote
+run-playground-remote:
+	$(MAKE) remote MAKE_CMD="run-playground"
+
+.PHONY: run-playground
+run-playground: build-playground
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(SEL4CP_BOARD) \
+		PATH_TO_LOADER_IMG=$(PLAYGROUND_LOADER_IMG) \
+		IMG_NAME="playground.img"
 
 # Serial Driver
 
