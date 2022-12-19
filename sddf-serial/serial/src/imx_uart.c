@@ -18,7 +18,8 @@ bool imx_uart_init(
 //    imx_uart->regs->cr2 &= ~UART_CR2_SRST;
 //    while (!(imx_uart->regs->cr2 & UART_CR2_SRST));
 //
-    /* Line configuration */
+    /* Sets the Line Protocol for the Serial Device to 8N1 (8 bits, no parity,
+     * one stop bit), which is a common default. */
     int ret_line_protocol = imx_uart_regs_set_line_protocol(
             imx_uart->regs,
             115200,
