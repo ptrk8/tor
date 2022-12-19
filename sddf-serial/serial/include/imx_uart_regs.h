@@ -94,9 +94,8 @@ void imx_uart_set_baud(
         long bps
 );
 
-/* TODO: Rename this. */
 /**
- * Configures the serial device.
+ * Sets the Line Protocol to be used by the serial device.
  * @param regs
  * @param bps
  * @param char_size
@@ -104,7 +103,7 @@ void imx_uart_set_baud(
  * @param stop_bits
  * @return
  */
-int serial_configure(
+int imx_uart_regs_set_line_protocol(
         imx_uart_regs_t *regs,
         long bps,
         int char_size,

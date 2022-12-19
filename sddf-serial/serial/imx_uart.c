@@ -19,7 +19,16 @@ bool imx_uart_init(
 //    while (!(imx_uart->regs->cr2 & UART_CR2_SRST));
 //
     /* Line configuration */
-    serial_configure(imx_uart->regs, 115200, 8, PARITY_NONE, 1);
+    int ret_line_protocol = imx_uart_regs_set_line_protocol(
+            imx_uart->regs,
+            115200,
+            8,
+            PARITY_NONE,
+            1
+    );
+    if (ret_line_protocol < 0) {
+        return false;
+    }
 
      /* Enable the UART */
     imx_uart->regs->cr1 |= UART_CR1_UARTEN;                /* Enable The uart.                  */

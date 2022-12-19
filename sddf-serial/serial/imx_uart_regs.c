@@ -21,7 +21,7 @@ void imx_uart_set_baud(
     regs->fcr = fcr;
 }
 
-int serial_configure(
+int imx_uart_regs_set_line_protocol(
         imx_uart_regs_t *regs,
         long bps,
         int char_size,

@@ -8,12 +8,11 @@
 uintptr_t uart_base_vaddr;
 
 /* Global UART device. */
-uart_t uart = {};
 imx_uart_t imx_uart = {};
 
 void serial_write(const char *str) {
     while (*str) {
-        uart_put_char(&uart, *str);
+//        uart_put_char(&uart, *str);
         str++;
     }
 }
