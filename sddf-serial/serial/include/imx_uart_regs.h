@@ -112,3 +112,8 @@ int serial_configure(
         int stop_bits
 );
 
+int internal_is_tx_fifo_busy(
+        imx_uart_regs_t *regs
+);
+
+

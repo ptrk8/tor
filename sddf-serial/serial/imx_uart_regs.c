@@ -67,4 +67,16 @@ int serial_configure(
     return 0;
 }
 
+int internal_is_tx_fifo_busy(
+        imx_uart_regs_t *regs
+) {
+    /* check the TXFE (transmit buffer FIFO empty) flag, which is cleared
+     * automatically when data is written to the TxFIFO. Even though the flag
+     * is set, the actual data transmission via the UART's 32 byte FIFO buffer
+     * might still be in progress.
+     */
+    return (0 == (regs->sr2 & UART_SR2_TXFIFO_EMPTY));
+}
+
+
 

@@ -19,13 +19,40 @@ void serial_write(const char *str) {
 }
 
 void init(void) {
-    sel4cp_dbg_puts("Starting serial.c.\n");
-    serial_write("Hello world.\n");
+//    sel4cp_dbg_puts("Starting serial.c.\n");
 
 //    bool is_success = uart_init(&uart, uart_base_vaddr);
     bool is_success = imx_uart_init(&imx_uart, uart_base_vaddr);
+    if (is_success) {
+        sel4cp_dbg_puts("Successfully initialise uart device.\n");
+    }
+    imx_uart_put_char(
+            &imx_uart,
+            '\n'
+    );
+//    char c = imx_uart_get_char(&imx_uart);
+//    sel4cp_dbg_putc(c);
+
+    for (int i = 0; i < 5; i++) {
+//        imx_uart_put_char(
+//                &imx_uart,
+//                'c'
+//        );
+//        imx_uart_put_char(
+//                &imx_uart,
+//                'a'
+//        );
+        imx_uart_put_char(
+                &imx_uart,
+                'b'
+        );
+
+//        char c = imx_uart_get_char(&imx_uart);
+//        sel4cp_dbg_putc(c);
+    }
+//
+//    serial_write("Hello world.\n");
 //    assert(is_success);
-    sel4cp_dbg_puts("Successfully initialise uart device.\n");
 
 }
 

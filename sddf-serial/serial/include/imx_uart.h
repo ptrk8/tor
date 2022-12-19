@@ -5,7 +5,7 @@
 #include "imx_uart_regs.h"
 
 typedef struct imx_uart imx_uart_t;
-struct imx_uart {
+volatile struct imx_uart {
     volatile imx_uart_regs_t *regs;
 };
 
@@ -18,4 +18,24 @@ struct imx_uart {
 bool imx_uart_init(
         imx_uart_t *imx_uart,
         uintptr_t base_vaddr
+);
+
+/**
+ * Prints out a character using the imx uart device.
+ * @param imx_uart
+ * @param c
+ * @return
+ */
+int imx_uart_put_char(
+        imx_uart_t *imx_uart,
+        int c
+);
+
+/**
+ * Gets character from UART device.
+ * @param imx_uart
+ * @return
+ */
+int imx_uart_get_char(
+        imx_uart_t *imx_uart
 );
