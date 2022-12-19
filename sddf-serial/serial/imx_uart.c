@@ -3,13 +3,16 @@
 
 bool imx_uart_init(
         imx_uart_t *imx_uart,
-        uintptr_t base_vaddr
+        uintptr_t base_vaddr,
+        bool auto_insert_carriage_return
 ) {
     if (imx_uart == NULL) {
         return false;
     }
     /* Save pointer to the registers. */
     imx_uart->regs = imx_uart_regs_get(base_vaddr);
+    /* Save user's auto carriage return preference. */
+    imx_uart->auto_insert_carriage_return = auto_insert_carriage_return;
 
 //    /* Software reset */
 //    imx_uart->regs->cr2 &= ~UART_CR2_SRST;
@@ -43,9 +46,10 @@ int imx_uart_put_char(
     if (internal_is_tx_fifo_busy(regs)) {
         return -1;
     }
-    if (c == '\n') {
-        /* TODO: Look into this. */
-//        if (c == '\n' && (d->flags & SERIAL_AUTO_CR)) {
+    /* If `auto_insert_carriage_return` is enabled, we first set the `\r`
+     * character and then set the `\n` character. */
+    if (c == '\n' && imx_uart->auto_insert_carriage_return) {
+//    if (c == '\n' && (d->flags & SERIAL_AUTO_CR)) { /* Original implementation. */
         /* write CR first */
         regs->txd = '\r';
         /* if we transform a '\n' (LF) into '\r\n' (CR+LF) this shall become an

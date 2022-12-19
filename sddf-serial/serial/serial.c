@@ -22,7 +22,11 @@ void init(void) {
 //    sel4cp_dbg_puts("Starting serial.c.\n");
 
 //    bool is_success = uart_init(&uart, uart_base_vaddr);
-    bool is_success = imx_uart_init(&imx_uart, uart_base_vaddr);
+    bool is_success = imx_uart_init(
+            &imx_uart,
+            uart_base_vaddr,
+            true
+    );
     if (is_success) {
         sel4cp_dbg_puts("Successfully initialise uart device.\n");
     }
