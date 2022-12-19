@@ -26,10 +26,10 @@ void init(void) {
     if (is_success) {
         sel4cp_dbg_puts("Successfully initialise uart device.\n");
     }
-    imx_uart_put_char(
+    while(imx_uart_put_char(
             &imx_uart,
             '\n'
-    );
+    ) == -1);
 //    char c = imx_uart_get_char(&imx_uart);
 //    sel4cp_dbg_putc(c);
 
@@ -42,10 +42,10 @@ void init(void) {
 //                &imx_uart,
 //                'a'
 //        );
-        imx_uart_put_char(
+        while(imx_uart_put_char(
                 &imx_uart,
                 'b'
-        );
+        ) == -1);
 
 //        char c = imx_uart_get_char(&imx_uart);
 //        sel4cp_dbg_putc(c);

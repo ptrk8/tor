@@ -9,7 +9,7 @@ bool imx_uart_init(
         return false;
     }
     /* Save pointer to the registers. */
-    imx_uart->regs = imx_uart_regs_init(base_vaddr);
+    imx_uart->regs = imx_uart_regs_get(base_vaddr);
 
 //    /* Software reset */
 //    imx_uart->regs->cr2 &= ~UART_CR2_SRST;
@@ -40,10 +40,9 @@ int imx_uart_put_char(
 ) {
     imx_uart_regs_t *regs = imx_uart->regs;
 
-//    if (internal_is_tx_fifo_busy(regs)) {
-//        return -1;
-//    }
-//
+    if (internal_is_tx_fifo_busy(regs)) {
+        return -1;
+    }
     if (c == '\n') {
         /* TODO: Look into this. */
 //        if (c == '\n' && (d->flags & SERIAL_AUTO_CR)) {
@@ -62,9 +61,9 @@ int imx_uart_put_char(
          * send 1 byte to have room in the FIFO again. At 115200 baud with 8N1
          * this takes 10 bit-times, which is 10/115200 = 86,8 usec.
          */
-//        while (internal_is_tx_fifo_busy(regs)) {
-//            /* busy loop */
-//        }
+        while (internal_is_tx_fifo_busy(regs)) {
+            /* busy loop */
+        }
     }
 
     regs->txd = c;

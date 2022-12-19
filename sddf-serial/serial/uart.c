@@ -10,7 +10,7 @@ bool uart_init(
     /* Save `base_vaddr`. */
     uart->base_vaddr = base_vaddr;
 
-    imx_uart_regs_t *regs = imx_uart_regs_init(base_vaddr);
+    imx_uart_regs_t *regs = imx_uart_regs_get(base_vaddr);
 
     /* Software reset */
     regs->cr2 &= ~UART_CR2_SRST;

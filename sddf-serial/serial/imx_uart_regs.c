@@ -1,6 +1,6 @@
 #include "imx_uart_regs.h"
 
-imx_uart_regs_t *imx_uart_regs_init(uintptr_t base_vaddr) {
+imx_uart_regs_t *imx_uart_regs_get(uintptr_t base_vaddr) {
     return (imx_uart_regs_t *) base_vaddr;
 }
 
