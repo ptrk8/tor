@@ -53,7 +53,7 @@ int imx_uart_put_char(
 ) {
     imx_uart_regs_t *regs = imx_uart->regs;
 
-    if (internal_is_tx_fifo_busy(regs)) {
+    if (imx_uart_regs_is_tx_fifo_busy(regs)) {
         return -1;
     }
     /* If `auto_insert_carriage_return` is enabled, we first set the `\r`
@@ -75,7 +75,7 @@ int imx_uart_put_char(
          * send 1 byte to have room in the FIFO again. At 115200 baud with 8N1
          * this takes 10 bit-times, which is 10/115200 = 86,8 usec.
          */
-        while (internal_is_tx_fifo_busy(regs)) {
+        while (imx_uart_regs_is_tx_fifo_busy(regs)) {
             /* busy loop */
         }
     }

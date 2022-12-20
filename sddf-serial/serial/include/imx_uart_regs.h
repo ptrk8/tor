@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #define BIT(n) (1ul<<(n))
 
@@ -100,7 +101,12 @@ int imx_uart_regs_set_line_protocol(
         int stop_bits
 );
 
-int internal_is_tx_fifo_busy(
+/**
+ * Returns `True` if Transmit FIFO buffer is not empty and `False` otherwise.
+ * @param regs
+ * @return
+ */
+bool imx_uart_regs_is_tx_fifo_busy(
         imx_uart_regs_t *regs
 );
 

@@ -75,7 +75,7 @@ int imx_uart_regs_set_line_protocol(
     return 0;
 }
 
-int internal_is_tx_fifo_busy(
+bool imx_uart_regs_is_tx_fifo_busy(
         imx_uart_regs_t *regs
 ) {
     /* check the TXFE (transmit buffer FIFO empty) flag, which is cleared
