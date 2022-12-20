@@ -298,10 +298,10 @@ void notified(sel4cp_channel channel) {
             sel4cp_dbg_puts("TwentySix");
             sel4cp_irq_ack(channel);
             return;
-//        case 61:
-//            sel4cp_dbg_puts("TwentySeven");
-//            sel4cp_irq_ack(channel);
-//            return;
+        case 61:
+            sel4cp_dbg_puts("TwentySeven");
+            sel4cp_irq_ack(channel);
+            return;
         case 62:
             sel4cp_dbg_puts("TwentyEight");
             sel4cp_irq_ack(channel);
