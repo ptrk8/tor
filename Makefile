@@ -30,6 +30,9 @@ SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
 HELLO_SRC_DIR = $(HELLO_SUBMODULE)
 WORKSHOP_SRC_DIR = $(WORKSHOP_SUBMODULE)/workshop
 
+SERIAL_TEST_DIR = $(SERIAL_SUBMODULE)/serial_test
+SERIAL_TEST_E2E_DIR = $(SERIAL_TEST_DIR)/e2e
+
 # =================================
 # Build artifacts
 # =================================
@@ -303,13 +306,15 @@ build-workshop:
 # Run
 # ==================================
 
+MQ_COMPLETION_TEXT ?= something-obscure
+
 .PHONY: run-img-on-mq
 run-img-on-mq:
 	# Copy the loader image to the TS server.
 	scp $(PATH_TO_LOADER_IMG) $(TS_USER_HOST):~/Downloads/$(IMG_NAME)
 	# Run the loader image on the TS server.
 	ssh -t $(TS_USER_HOST) "\
-		bash -ilc 'mq.sh run -c \"something\" -l output -s $(MQ_BOARD) -f ~/Downloads/$(IMG_NAME)' ; "
+		bash -ilc 'mq.sh run -c \"$(MQ_COMPLETION_TEXT)\" -l output -s $(MQ_BOARD) -f ~/Downloads/$(IMG_NAME)' ; "
 
 # sDDF
 
@@ -371,6 +376,21 @@ run-workshop:
 		-C $(WORKSHOP_SUBMODULE) \
 		run-part3 \
 		PWD=$(WORKSHOP_SUBMODULE)
+
+# ==================================
+# Test
+# ==================================
+
+# Serial Driver
+
+.PHONY: test-e2e-serial
+test-e2e-serial:
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(SEL4CP_BOARD) \
+		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
+		IMG_NAME="sddf-serial.img" \
+		MQ_COMPLETION_TEXT="=== END ===" | \
+		EXPECTED=$(SERIAL_TEST_E2E_DIR)/expected/expected_imx_uart.txt $(SERIAL_TEST_E2E_DIR)/scripts/assert_imx_uart.py
 
 # ==================================
 # Machine Queue
