@@ -4,8 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define BIT(n) (1ul<<(n))
+#include "serial_parity.h"
 
+#define BIT(n) (1ul<<(n))
 
 #define UART_REF_CLK 12096000
 #ifndef UART_REF_CLK
@@ -47,13 +48,6 @@
 #define UART_URXD_READY_MASK   BIT(15)
 #define UART_BYTE_MASK         0xFF
 
-
-/* TODO: Spun out into its own file. */
-enum serial_parity {
-    PARITY_NONE,
-    PARITY_EVEN,
-    PARITY_ODD
-};
 
 struct imx_uart_regs {
     uint32_t rxd;      /* 0x000 Receiver Register */
@@ -97,7 +91,7 @@ int imx_uart_regs_set_line_protocol(
         imx_uart_regs_t *regs,
         long bps,
         int char_size,
-        enum serial_parity parity,
+        serial_parity_t parity,
         int stop_bits
 );
 

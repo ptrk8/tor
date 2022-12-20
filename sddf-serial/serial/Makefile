@@ -46,6 +46,7 @@ CFLAGS += -I$(BOARD_DIR)/include \
 SERIAL_OBJS := serial.o \
 				imx_uart_regs.o \
 				imx_uart.o \
+				serial_parity.o \
 
 # Specifies where the source files are.
 SRC_DIR := src
