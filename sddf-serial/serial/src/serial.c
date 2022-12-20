@@ -1,6 +1,7 @@
 #include "serial.h"
 
-/* This will be automatically populated by the seL4CP tool. */
+/* This will be automatically populated with the Virtual Address that
+ * corresponds to the Physical Address of the UART device by the seL4CP tool. */
 uintptr_t uart_base_vaddr;
 
 /* Global UART device. */
