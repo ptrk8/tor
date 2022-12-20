@@ -388,7 +388,7 @@ test-e2e-serial-remote:
 	$(MAKE) remote MAKE_CMD="test-e2e-serial"
 
 .PHONY: test-e2e-serial
-test-e2e-serial:
+test-e2e-serial: build-serial
 	$(MAKE) run-img-on-mq \
 		MQ_BOARD=$(SEL4CP_BOARD) \
 		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
