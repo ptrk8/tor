@@ -1,9 +1,5 @@
-
 #include "serial.h"
-#include "util.h"
 
-//#define IRQ_CH 1
-//
 /* This will be automatically populated by the seL4CP tool. */
 uintptr_t uart_base_vaddr;
 
@@ -18,45 +14,22 @@ void serial_write(const char *str) {
 }
 
 void init(void) {
-//    sel4cp_dbg_puts("Starting serial.c.\n");
+    sel4cp_dbg_puts("Initialising UART device...\n");
 
-//    bool is_success = uart_init(&uart, uart_base_vaddr);
     bool is_success = imx_uart_init(
             &imx_uart,
             uart_base_vaddr,
             true
     );
     if (is_success) {
-        sel4cp_dbg_puts("Successfully initialise uart device.\n");
+        sel4cp_dbg_puts("UART device initialisation SUCCESS.\n");
     }
-    while(imx_uart_put_char(
-            &imx_uart,
-            '\n'
-    ) == -1);
-//    char c = imx_uart_get_char(&imx_uart);
-//    sel4cp_dbg_putc(c);
-
+    while (imx_uart_put_char(&imx_uart, '\n') == -1);
     for (int i = 0; i < 5; i++) {
-//        imx_uart_put_char(
-//                &imx_uart,
-//                'c'
-//        );
-//        imx_uart_put_char(
-//                &imx_uart,
-//                'a'
-//        );
-        while(imx_uart_put_char(
-                &imx_uart,
-                'b'
-        ) == -1);
-
-//        char c = imx_uart_get_char(&imx_uart);
-//        sel4cp_dbg_putc(c);
+        while (imx_uart_put_char(&imx_uart, 'a') == -1);
+        while (imx_uart_put_char(&imx_uart, 'b') == -1);
+        while (imx_uart_put_char(&imx_uart, 'c') == -1);
     }
-//
-//    serial_write("Hello world.\n");
-//    assert(is_success);
-
 }
 
 seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {

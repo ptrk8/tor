@@ -42,9 +42,13 @@ REPORT_FILE = $(BUILD_DIR)/report.txt
 CFLAGS += -I$(BOARD_DIR)/include \
 	-Iinclude
 
+# Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_OBJS := serial.o \
 				imx_uart_regs.o \
 				imx_uart.o \
+
+# Specifies where the source files are.
+SRC_DIR := src
 
 .PHONY: all
 all: directories $(IMAGE_FILE)
@@ -53,20 +57,37 @@ all: directories $(IMAGE_FILE)
 directories:
 	mkdir -p $(BUILD_DIR)
 
-$(BUILD_DIR)/%.o: %.c Makefile
+# ======================================
+# Step 1: Generate $(BUILD_DIR)/%.o object files from $(SRC_DIR)/%.c source
+# files and $(SRC_DIR)/%.c assembler files.
+# ======================================
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c Makefile
 	$(CC) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/%.o: %.s Makefile
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.s Makefile
 	$(AS) -g3 -mcpu=$(CPU) $< -o $@
+
+# ======================================
+# Step 2: Generate our $(BUILD_DIR)/serial.elf ELF file using each
+# $(SERIAL_OBJS) object file in the $(BUILD_DIR).
+# ======================================
 
 $(BUILD_DIR)/serial.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
-$(IMAGE_FILE) $(REPORT_FILE): $(addprefix $(BUILD_DIR)/, $(IMAGES)) serial.system
-	$(SEL4CP_TOOL) serial.system --search-path $(BUILD_DIR) --board $(SEL4CP_BOARD) --config $(SEL4CP_CONFIG) -o $(IMAGE_FILE) -r $(REPORT_FILE)
+# ======================================
+# Step 3: Generate our $(BUILD_DIR)/loader.img using the $(SEL4CP_TOOL).
+# ======================================
 
-%.o:
-	$(CC) $(CFLAGS) -c $(@:.o=.c) -o $@
+$(IMAGE_FILE) $(REPORT_FILE): $(addprefix $(BUILD_DIR)/, $(IMAGES)) serial.system
+	$(SEL4CP_TOOL) \
+		  serial.system \
+		  --search-path $(BUILD_DIR) \
+		  --board $(SEL4CP_BOARD) \
+		  --config $(SEL4CP_CONFIG) \
+		  -o $(IMAGE_FILE) \
+		  -r $(REPORT_FILE)
 
 .PHONY: clean
 clean:
