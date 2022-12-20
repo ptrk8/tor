@@ -83,17 +83,6 @@ typedef volatile struct imx_uart_regs imx_uart_regs_t;
  */
 imx_uart_regs_t *imx_uart_regs_get(uintptr_t base_vaddr);
 
-/* TODO: Rename this. */
-/**
- * Sets the baud rate.
- * @param regs
- * @param bps
- */
-void imx_uart_set_baud(
-        imx_uart_regs_t *regs,
-        long bps
-);
-
 /**
  * Sets the Line Protocol to be used by the serial device.
  * @param regs

@@ -383,6 +383,10 @@ run-workshop:
 
 # Serial Driver
 
+.PHONY: test-e2e-serial-remote
+test-e2e-serial-remote:
+	$(MAKE) remote MAKE_CMD="test-e2e-serial"
+
 .PHONY: test-e2e-serial
 test-e2e-serial:
 	$(MAKE) run-img-on-mq \

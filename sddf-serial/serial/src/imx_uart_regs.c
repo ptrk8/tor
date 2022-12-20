@@ -1,12 +1,20 @@
 #include "imx_uart_regs.h"
 
+/**
+ * Sets the baud rate.
+ * @param regs
+ * @param bps
+ */
+static void imx_uart_regs_set_baud(
+        imx_uart_regs_t *regs,
+        long bps
+);
+
 imx_uart_regs_t *imx_uart_regs_get(uintptr_t base_vaddr) {
     return (imx_uart_regs_t *) base_vaddr;
 }
 
-
-/* TODO: This should be renamed to imx_uart_regs_set_baud. */
-void imx_uart_set_baud(
+static void imx_uart_regs_set_baud(
         imx_uart_regs_t *regs,
         long bps
 ) {
@@ -62,8 +70,8 @@ int imx_uart_regs_set_line_protocol(
     }
     /* Apply the changes */
     regs->cr2 = cr2;
-    /* Now set the board rate */
-    imx_uart_set_baud(regs, bps);
+    /* Now set the baud rate */
+    imx_uart_regs_set_baud(regs, bps);
     return 0;
 }
 
