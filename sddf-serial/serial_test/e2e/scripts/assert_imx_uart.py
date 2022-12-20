@@ -6,7 +6,6 @@ from pprint import pprint
 
 
 def main():
-
     # Get expected output from file.
     with open(os.environ.get('EXPECTED')) as file:
         lines_expected = file.readlines()
@@ -34,6 +33,7 @@ def main():
         pprint(lines_actual)
         print("=== EXPECTED ===")
         pprint(lines_expected)
+
 
 if __name__ == '__main__':
     main()
