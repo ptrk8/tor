@@ -161,9 +161,9 @@ init: \
 	init-sel4 \
 	init-sddf \
 
-# 1. Initialise locally.
+# 1. Patch sel4 locally.
 # 2. Then initialise remotely.
-# This is to ensure the local version of seL4 and seL4cp are consistent for rsync.
+# This is to ensure the local version of seL4 and seL4cp are consistent with remote version.
 .PHONY: init-remote
 init-remote: fix-sel4
 	$(MAKE) remote MAKE_CMD="init"
@@ -184,7 +184,7 @@ init-sel4cp:
 	# Install missing Python requirements into Virtual Environment.
 	$(SEL4CP_PYTHON_VENV_PYTHON) -m pip install six future
 
-# Makes sure you use this seL4 commit hash: https://github.com/BreakawayConsulting/sel4cp#sel4-version
+# Make sure you use this seL4 commit hash: https://github.com/BreakawayConsulting/sel4cp#sel4-version
 .PHONY: init-sel4
 init-sel4:
 	cd $(SEL4_SUBMODULE) && \
