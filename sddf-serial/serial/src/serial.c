@@ -14,6 +14,7 @@ void serial_write(const char *str) {
 }
 
 void init(void) {
+    sel4cp_dbg_puts("\n=== START ===\n");
     sel4cp_dbg_puts("Initialising UART device...\n");
 
     bool is_success = imx_uart_init(
@@ -32,6 +33,7 @@ void init(void) {
     }
     while (imx_uart_put_char(&imx_uart, '\n') == -1);
     sel4cp_dbg_puts("Ending UART test...\n");
+    sel4cp_dbg_puts("=== END ===\n");
 }
 
 seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {
