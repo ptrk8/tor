@@ -48,7 +48,7 @@
 #define UART_URXD_READY_MASK   BIT(15)
 #define UART_BYTE_MASK         0xFF
 
-
+typedef volatile struct imx_uart_regs imx_uart_regs_t;
 struct imx_uart_regs {
     uint32_t rxd;      /* 0x000 Receiver Register */
     uint32_t res0[15];
@@ -69,7 +69,6 @@ struct imx_uart_regs {
     uint32_t onems;    /* 0x0b0 One Millisecond Register */
     uint32_t ts;       /* 0x0b4 Test Register */
 };
-typedef volatile struct imx_uart_regs imx_uart_regs_t;
 
 /**
  * Returns a pointer to the imx_uart_regs struct.
