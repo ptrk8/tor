@@ -19,7 +19,70 @@
                 perms="rw"
                 cached="false"
                 setvar_vaddr="uart_base_vaddr"/>
-<!--        <irq irq="59" id="1" />-->
+        <irq irq="58" id="1" />
+        <irq irq="59" id="2" />
+        <irq irq="60" id="3" />
+        <irq irq="61" id="4" />
+        <irq irq="62" id="5" />
+        <irq irq="63" id="6" />
+        <irq irq="64" id="7" />
+        <irq irq="65" id="8" />
+        <irq irq="66" id="9" />
+        <irq irq="67" id="10" />
+        <irq irq="68" id="11" />
+        <irq irq="69" id="12" />
+        <irq irq="70" id="13" />
+        <irq irq="71" id="14" />
+        <irq irq="72" id="15" />
+        <irq irq="73" id="16" />
+        <irq irq="74" id="17" />
+        <irq irq="75" id="18" />
+        <irq irq="76" id="19" />
+        <irq irq="77" id="20" />
+        <irq irq="78" id="21" />
+        <irq irq="79" id="22" />
+        <irq irq="80" id="23" />
+        <irq irq="81" id="24" />
+        <irq irq="82" id="25" />
+        <irq irq="83" id="26" />
+        <irq irq="84" id="27" />
+        <irq irq="85" id="28" />
+        <irq irq="86" id="29" />
+        <irq irq="87" id="30" />
+        <irq irq="88" id="31" />
+        <irq irq="89" id="32" />
+        <irq irq="90" id="33" />
+        <irq irq="91" id="34" />
+        <irq irq="92" id="35" />
+        <irq irq="93" id="36" />
+        <irq irq="94" id="37" />
+        <irq irq="95" id="38" />
+        <irq irq="96" id="39" />
+        <irq irq="97" id="40" />
+        <irq irq="98" id="41" />
+        <irq irq="99" id="42" />
+        <irq irq="100" id="43" />
+        <irq irq="101" id="44" />
+        <irq irq="102" id="45" />
+        <irq irq="103" id="46" />
+        <irq irq="104" id="47" />
+        <irq irq="105" id="48" />
+        <irq irq="106" id="49" />
+        <irq irq="107" id="50" />
+        <irq irq="108" id="51" />
+        <irq irq="109" id="52" />
+        <irq irq="110" id="53" />
+        <irq irq="111" id="54" />
+        <irq irq="112" id="55" />
+        <irq irq="113" id="56" />
+        <irq irq="114" id="57" />
+        <irq irq="115" id="58" />
+        <irq irq="116" id="59" />
+
+        <irq irq="26" id="60" />
+        <irq irq="27" id="61" />
+        <irq irq="28" id="62" />
+        <irq irq="29" id="63" />
     </protection_domain>
 </system>
 
