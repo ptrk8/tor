@@ -2,7 +2,6 @@
 
 #include <sel4cp.h>
 #include <sel4/sel4.h>
-//#include <assert.h>
 
 #include "imx_uart.h"
 

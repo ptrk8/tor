@@ -15,13 +15,6 @@ target_include_directories(lib_bit PUBLIC include/)
 add_library(lib_serial_parity src/serial_parity.c)
 target_include_directories(lib_serial_parity PUBLIC include/)
 
-add_library(lib_serial src/serial.c)
-target_include_directories(lib_serial PUBLIC include/)
-target_link_libraries(
-        lib_serial
-        lib_sel4cp_imx8mm
-)
-
 add_library(lib_imx_uart_regs src/imx_uart_regs.c)
 target_include_directories(lib_imx_uart_regs PUBLIC include/)
 target_link_libraries(
@@ -37,6 +30,14 @@ target_link_libraries(
         lib_imx_uart
         lib_sel4cp_imx8mm
         lib_imx_uart_regs
+)
+
+add_library(lib_serial src/serial.c)
+target_include_directories(lib_serial PUBLIC include/)
+target_link_libraries(
+        lib_serial
+        lib_sel4cp_imx8mm
+        lib_imx_uart
 )
 
 
