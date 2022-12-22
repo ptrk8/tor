@@ -5,8 +5,7 @@
 #include <stdbool.h>
 
 #include "serial_parity.h"
-
-#define BIT(n) (1ul<<(n))
+#include "bit.h"
 
 #define UART_REF_CLK 12096000
 #ifndef UART_REF_CLK
