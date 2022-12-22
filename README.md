@@ -1,10 +1,10 @@
 # Taste of Research (TOR)
 
-## Setting up
+## Setup
 
-1. Make sure to run the following command for CLion:
+1. Run the following command to copy remote build artifacts for the seL4 Core Platform Build to the local machine to enable IDE autocompletion:
    ```Makefile
-   $ make clion
+   $ make setup-for-ide
    ```
 
 

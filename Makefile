@@ -66,8 +66,8 @@ WORKSHOP_BUILD_DIR = $(WORKSHOP_SRC_DIR)/build
 # =================================
 
 # Configures environment for CLion.
-.PHONY: clion
-clion: \
+.PHONY: setup-for-ide
+setup-for-ide: \
 	sync-sel4cp-build-artifacts
 
 # Run this after you have built sel4cp.
