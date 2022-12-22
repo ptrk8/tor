@@ -45,29 +45,21 @@ void notified(sel4cp_channel channel) {
 //    sel4cp_dbg_puts("Hello");
     switch(channel) {
         case 1:
-//            signal_msg = seL4_MessageInfo_new(IRQAckIRQ, 0, 0, 0);
-//            signal = (BASE_IRQ_CAP + IRQ_CH);
             sel4cp_dbg_puts("Got something 1");
             /* Acknowledge receipt of the interrupt. */
             sel4cp_irq_ack(channel);
             return;
         case 2:
-//            signal_msg = seL4_MessageInfo_new(IRQAckIRQ, 0, 0, 0);
-//            signal = (BASE_IRQ_CAP + IRQ_CH);
             sel4cp_dbg_puts("2");
             /* Acknowledge receipt of the interrupt. */
             sel4cp_irq_ack(channel);
             return;
         case 3:
-//            signal_msg = seL4_MessageInfo_new(IRQAckIRQ, 0, 0, 0);
-//            signal = (BASE_IRQ_CAP + IRQ_CH);
             sel4cp_dbg_puts("Got something 3");
             /* Acknowledge receipt of the interrupt. */
             sel4cp_irq_ack(channel);
             return;
         case 4:
-//            signal_msg = seL4_MessageInfo_new(IRQAckIRQ, 0, 0, 0);
-//            signal = (BASE_IRQ_CAP + IRQ_CH);
             sel4cp_dbg_puts("Got something 4");
             /* Acknowledge receipt of the interrupt. */
             sel4cp_irq_ack(channel);
@@ -294,22 +286,22 @@ void notified(sel4cp_channel channel) {
             return;
 
 
-        case 60:
-            sel4cp_dbg_puts("TwentySix");
-            sel4cp_irq_ack(channel);
-            return;
-        case 61:
-            sel4cp_dbg_puts("TwentySeven");
-            sel4cp_irq_ack(channel);
-            return;
-        case 62:
-            sel4cp_dbg_puts("TwentyEight");
-            sel4cp_irq_ack(channel);
-            return;
-        case 63:
-            sel4cp_dbg_puts("TwentyNine");
-            sel4cp_irq_ack(channel);
-            return;
+//        case 60:
+//            sel4cp_dbg_puts("TwentySix");
+//            sel4cp_irq_ack(channel);
+//            return;
+//        case 61:
+//            sel4cp_dbg_puts("TwentySeven");
+//            sel4cp_irq_ack(channel);
+//            return;
+//        case 62:
+//            sel4cp_dbg_puts("TwentyEight");
+//            sel4cp_irq_ack(channel);
+//            return;
+//        case 63:
+//            sel4cp_dbg_puts("TwentyNine");
+//            sel4cp_irq_ack(channel);
+//            return;
         default:
             sel4cp_dbg_puts("eth driver: received notification on unexpected channel\n");
             break;

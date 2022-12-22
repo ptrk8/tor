@@ -79,10 +79,10 @@
         <irq irq="115" id="58" />
         <irq irq="116" id="59" />
 
-        <irq irq="26" id="60" />
-        <irq irq="27" id="61" />
-        <irq irq="28" id="62" />
-        <irq irq="29" id="63" />
+<!--        <irq irq="26" id="60" />-->
+<!--        <irq irq="27" id="61" />-->
+<!--        <irq irq="28" id="62" />-->
+<!--        <irq irq="29" id="63" />-->
     </protection_domain>
 </system>
 
