@@ -49,11 +49,16 @@ void notified(sel4cp_channel channel) {
             /* Acknowledge receipt of the interrupt. */
             sel4cp_irq_ack(channel);
             return;
-        case 2:
+        case 2: {
             sel4cp_dbg_puts("2");
+            int c = imx_uart_get_char(&imx_uart);
+            if (c != -1) {
+                sel4cp_dbg_puts("c");
+            }
             /* Acknowledge receipt of the interrupt. */
             sel4cp_irq_ack(channel);
             return;
+        }
         case 3:
             sel4cp_dbg_puts("Got something 3");
             /* Acknowledge receipt of the interrupt. */
