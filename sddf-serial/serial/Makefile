@@ -47,6 +47,7 @@ SERIAL_OBJS := serial.o \
 				imx_uart_regs.o \
 				imx_uart.o \
 				serial_parity.o \
+				bit.o \
 
 # Specifies where the source files are.
 SRC_DIR := src

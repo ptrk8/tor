@@ -9,6 +9,9 @@ project(serial C)
 #
 #set(GCC_COMPILE_FLAGS "-Wall -Werror -Wvla")
 
+add_library(lib_bit src/bit.c)
+target_include_directories(lib_bit PUBLIC include/)
+
 add_library(lib_serial_parity src/serial_parity.c)
 target_include_directories(lib_serial_parity PUBLIC include/)
 
@@ -25,6 +28,7 @@ target_link_libraries(
         lib_imx_uart_regs
         lib_sel4cp_imx8mm
         lib_serial_parity
+        lib_bit
 )
 
 add_library(lib_imx_uart src/imx_uart.c)
