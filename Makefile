@@ -15,6 +15,7 @@ SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 SERVER_USER_HOST = patrick@vm_comp4961_ubuntu1804
 SERVER_REMOTE_DIR = ~/remote/$(shell hostname -s)/
 TS_USER_HOST = patrickh@login.trustworthy.systems
+TFTP_USER_HOST = patrickh@tftp.keg.cse.unsw.edu.au
 
 SEL4CP_PYTHON_VENV_NAME = sel4cp_venv
 SEL4CP_PYTHON_VENV_PATH = $(SEL4CP_SUBMODULE)/$(SEL4CP_PYTHON_VENV_NAME)
@@ -303,6 +304,18 @@ build-workshop:
 		PWD=$(WORKSHOP_SUBMODULE)
 
 # ==================================
+# Console
+# ==================================
+
+# Ctrl + e, c, f: Hooks you up to the serial port to start sending chars.
+# Ctrl + e, c, .: Exits the console serial.
+.PHONY: console
+console:
+	ssh -t $(TS_USER_HOST) "\
+		ssh -t $(TFTP_USER_HOST) \"\
+			console -f $(BOARD)\" ; "
+
+# ==================================
 # Run
 # ==================================
 
@@ -355,6 +368,15 @@ run-serial: build-serial
 		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
 		IMG_NAME="sddf-serial.img"
 
+# Enables you to send chars to the UART port of the device.
+# Ctrl + e, c, f : Hooks you up to the serial port to start sending chars. If you
+# wait after the image is running on the device before you run this Make
+# command, you don't need to use this command.
+# Ctrl + e, c, . : Exits the console serial.
+.PHONY: console-serial
+console-serial:
+	$(MAKE) console BOARD=$(SEL4CP_BOARD)
+
 # Hello World
 
 .PHONY: run-hello-remote
@@ -403,11 +425,11 @@ test-e2e-serial: build-serial
 .PHONY: mq-getlock
 mq-getlock:
 	ssh -t $(TS_USER_HOST) "\
-		bash -ilc 'mq.sh sem -f -signal $(SYSTEM)' ; "
+		bash -ilc 'mq.sh sem -f -signal $(BOARD)' ; "
 
 .PHONY: mq-getlock-imx8mm
 mq-getlock-imx8mm:
-	$(MAKE) mq-getlock SYSTEM="imx8mm"
+	$(MAKE) mq-getlock BOARD="imx8mm"
 
 
 
