@@ -80,7 +80,10 @@ void notified(sel4cp_channel channel) {
     serial_driver_t *serial_driver = &global_serial_driver; /* Local reference to global serial driver for our convenience. */
     switch(channel) {
         case IRQ_59_CHANNEL: {
+            /* We obtain the character for the UART device. */
             int c = imx_uart_get_char(&global_serial_driver.imx_uart);
+            /* If the character is not erroneous, we send the character to the
+             * UART device to output to the console. */
             if (c != -1) {
                 serial_driver_put_char(serial_driver, c);
             }
