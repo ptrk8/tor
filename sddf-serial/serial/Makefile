@@ -31,7 +31,7 @@ SEL4CP_TOOL ?= $(SEL4CP_SDK)/bin/sel4cp
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
-IMAGES := serial.elf
+IMAGES := serial_driver.elf
 CFLAGS := -mcpu=$(CPU) -mstrict-align -ffreestanding -g3 -O3 -Wall  -Wno-unused-function
 LDFLAGS := -L$(BOARD_DIR)/lib
 LIBS := -lsel4cp -Tsel4cp.ld -lc
@@ -71,11 +71,11 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s Makefile
 	$(AS) -g3 -mcpu=$(CPU) $< -o $@
 
 # ======================================
-# Step 2: Generate our $(BUILD_DIR)/serial.elf ELF file using each
+# Step 2: Generate our $(BUILD_DIR)/serial_driver.elf ELF file using each
 # $(SERIAL_OBJS) object file in the $(BUILD_DIR).
 # ======================================
 
-$(BUILD_DIR)/serial.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_OBJS))
+$(BUILD_DIR)/serial_driver.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 # ======================================

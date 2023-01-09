@@ -6,12 +6,12 @@
             size="0x10_000"
             phys_addr="0x30890000"/>
     <protection_domain
-            name="serial"
+            name="serial_driver"
             priority="101"
             budget="160"
             period="300"
             pp="true">
-        <program_image path="serial.elf"/>
+        <program_image path="serial_driver.elf"/>
         <!-- We map our physical memory to the virtual address at 0x5_000_000 -->
         <map
                 mr="uart"
