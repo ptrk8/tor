@@ -7,6 +7,8 @@
 
 #define IRQ_59_CHANNEL (2)
 
+#define SERIAL_DRIVER_TO_SERIAL_CLIENT_CHANNEL (4)
+
 typedef struct serial_driver serial_driver_t;
 struct serial_driver {
     /* UART device. */

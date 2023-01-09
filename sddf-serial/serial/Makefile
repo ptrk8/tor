@@ -31,7 +31,8 @@ SEL4CP_TOOL ?= $(SEL4CP_SDK)/bin/sel4cp
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
-IMAGES := serial_driver.elf
+IMAGES := serial_driver.elf \
+			serial_client.elf
 CFLAGS := -mcpu=$(CPU) -mstrict-align -ffreestanding -g3 -O3 -Wall  -Wno-unused-function
 LDFLAGS := -L$(BOARD_DIR)/lib
 LIBS := -lsel4cp -Tsel4cp.ld -lc
@@ -43,11 +44,13 @@ CFLAGS += -I$(BOARD_DIR)/include \
 	-Iinclude
 
 # Specifies which Object files in $(BUILD_DIR) should be linked.
-SERIAL_OBJS := serial_driver.o \
+SERIAL_DRIVER_OBJS := serial_driver.o \
 				imx_uart_regs.o \
 				imx_uart.o \
 				serial_parity.o \
 				bit.o \
+
+SERIAL_CLIENT_OBJS := serial_client.o
 
 # Specifies where the source files are.
 SRC_DIR := src
@@ -72,10 +75,13 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s Makefile
 
 # ======================================
 # Step 2: Generate our $(BUILD_DIR)/serial_driver.elf ELF file using each
-# $(SERIAL_OBJS) object file in the $(BUILD_DIR).
+# $(SERIAL_DRIVER_OBJS) object file in the $(BUILD_DIR).
 # ======================================
 
-$(BUILD_DIR)/serial_driver.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_OBJS))
+$(BUILD_DIR)/serial_driver.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_DRIVER_OBJS))
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+$(BUILD_DIR)/serial_client.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_CLIENT_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 # ======================================

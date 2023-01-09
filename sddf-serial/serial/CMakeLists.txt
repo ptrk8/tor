@@ -40,4 +40,11 @@ target_link_libraries(
         lib_imx_uart
 )
 
+add_library(lib_serial_client src/serial_client.c)
+target_include_directories(lib_serial_client PUBLIC include/)
+target_link_libraries(
+        lib_serial_client
+        lib_sel4cp_imx8mm
+)
+
 
