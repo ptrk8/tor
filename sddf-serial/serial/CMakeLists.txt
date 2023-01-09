@@ -32,10 +32,10 @@ target_link_libraries(
         lib_imx_uart_regs
 )
 
-add_library(lib_serial src/serial.c)
-target_include_directories(lib_serial PUBLIC include/)
+add_library(lib_serial_driver src/serial_driver.c)
+target_include_directories(lib_serial_driver PUBLIC include/)
 target_link_libraries(
-        lib_serial
+        lib_serial_driver
         lib_sel4cp_imx8mm
         lib_imx_uart
 )

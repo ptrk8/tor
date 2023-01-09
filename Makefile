@@ -361,6 +361,8 @@ run-playground: build-playground
 run-serial-remote:
 	$(MAKE) remote MAKE_CMD="run-serial"
 
+# To test sending characters to the serial device, make sure to run `make
+# console-serial` in a separate Terminal as explained below.
 .PHONY: run-serial
 run-serial: build-serial
 	$(MAKE) run-img-on-mq \
