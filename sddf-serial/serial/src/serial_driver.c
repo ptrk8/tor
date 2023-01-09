@@ -50,13 +50,8 @@ void serial_driver_put_char(serial_driver_t *serial_driver, int ch) {
 void init(void) {
     sel4cp_dbg_puts("\n=== START ===\n");
     sel4cp_dbg_puts("Initialising UART device...\n");
-
+    /* Local reference to our global serial driver for convenience. */
     serial_driver_t *serial_driver = &global_serial_driver;
-//    bool is_success = imx_uart_init(
-//            &imx_uart,
-//            uart_base_vaddr,
-//            true
-//    );
     int ret_serial_driver_init = serial_driver_init(
             serial_driver,
             uart_base_vaddr,
