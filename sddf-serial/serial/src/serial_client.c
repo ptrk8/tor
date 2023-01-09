@@ -19,8 +19,6 @@ static void serial_client_notify_serial_driver() {
     sel4cp_notify(SERIAL_CLIENT_TO_SERIAL_DRIVER_CHANNEL);
 }
 
-//void serial_client_memcpy(char *dest, char *src, size_t len);
-
 //int printf(const char *format, ...) {
 //
 //    /* Declare a va_list type variable */
