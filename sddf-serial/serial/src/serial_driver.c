@@ -50,8 +50,7 @@ void serial_driver_put_char(serial_driver_t *serial_driver, int ch) {
 void init(void) {
     sel4cp_dbg_puts("\n=== START ===\n");
     sel4cp_dbg_puts("Initialising UART device...\n");
-    /* Local reference to our global serial driver for convenience. */
-    serial_driver_t *serial_driver = &global_serial_driver;
+    serial_driver_t *serial_driver = &global_serial_driver; /* Local reference to global serial driver for our convenience. */
     int ret_serial_driver_init = serial_driver_init(
             serial_driver,
             uart_base_vaddr,
@@ -78,11 +77,12 @@ seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {
 }
 
 void notified(sel4cp_channel channel) {
+    serial_driver_t *serial_driver = &global_serial_driver; /* Local reference to global serial driver for our convenience. */
     switch(channel) {
         case IRQ_59_CHANNEL: {
             int c = imx_uart_get_char(&global_serial_driver.imx_uart);
             if (c != -1) {
-                sel4cp_dbg_puts("c");
+                serial_driver_put_char(serial_driver, c);
             }
             /* Acknowledge receipt of the interrupt. */
             sel4cp_irq_ack(channel);

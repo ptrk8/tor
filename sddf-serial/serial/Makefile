@@ -43,7 +43,7 @@ CFLAGS += -I$(BOARD_DIR)/include \
 	-Iinclude
 
 # Specifies which Object files in $(BUILD_DIR) should be linked.
-SERIAL_OBJS := serial.o \
+SERIAL_OBJS := serial_driver.o \
 				imx_uart_regs.o \
 				imx_uart.o \
 				serial_parity.o \
