@@ -17,3 +17,11 @@ target_link_libraries(
         lib_sel4cp_imx8mm
         lib_shared_ringbuffer
 )
+
+add_library(lib_lwip lwip.c)
+target_include_directories(lib_lwip PUBLIC lwip/src/include)
+target_link_libraries(
+        lib_lwip
+        lib_sel4cp_imx8mm
+        lib_shared_ringbuffer
+)
