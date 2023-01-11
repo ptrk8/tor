@@ -402,6 +402,31 @@ run-workshop:
 		PWD=$(WORKSHOP_SUBMODULE)
 
 # ==================================
+# Debug
+# ==================================
+
+# This is the `objdump` command for ELF binaries in the $(SERIAL_BUILD_DIR).
+# This command won't work if you run it remotely via $ make remote
+# MAKE_CMD="objdump-serial".
+.PHONY: objdump-serial
+objdump-serial:
+	aarch64-linux-gnu-objdump \
+		-Dlx $(SERIAL_BUILD_DIR)/$(PATH_TO_ELF) \
+		| less
+
+# This command can and should be run remotely via $ make remote
+# MAKE_CMD="objdump-serial-serial_client".
+.PHONY: objdump-serial-serial_client
+objdump-serial-serial_client:
+	$(MAKE) objdump-serial PATH_TO_ELF="serial_client.elf"
+
+# This command can and should be run remotely via $ make remote
+# MAKE_CMD="objdump-serial-serial_driver".
+.PHONY: objdump-serial-serial_driver
+objdump-serial-serial_driver:
+	$(MAKE) objdump-serial PATH_TO_ELF="serial_driver.elf"
+
+# ==================================
 # Test
 # ==================================
 
