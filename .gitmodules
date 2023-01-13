@@ -10,3 +10,6 @@
 [submodule "sel4cp-workshop"]
 	path = sel4cp-workshop
 	url = git@github.com:ptrk8/seL4cp-workshop.git
+[submodule "sddf-mmc"]
+	path = sddf-mmc
+	url = git@github.com:ptrk8/sddf-mmc.git

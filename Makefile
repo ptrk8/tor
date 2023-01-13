@@ -7,6 +7,7 @@ SEL4CP_SUBMODULE = $(PWD)/sel4cp
 SDDF_SUBMODULE = $(PWD)/sddf
 PLAYGROUND_SUBMODULE = $(PWD)/sddf-playground
 SERIAL_SUBMODULE = $(PWD)/sddf-serial
+MMC_SUBMODULE = $(PWD)/sddf-mmc
 HELLO_SUBMODULE = $(PWD)/hello-world
 WORKSHOP_SUBMODULE = $(PWD)/sel4cp-workshop
 
@@ -28,11 +29,18 @@ LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 SDDF_SRC_DIR = $(SDDF_SUBMODULE)/echo_server
 PLAYGROUND_SRC_DIR = $(PLAYGROUND_SUBMODULE)/echo_server
 SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
+MMC_SRC_DIR = $(MMC_SUBMODULE)/mmc
 HELLO_SRC_DIR = $(HELLO_SUBMODULE)
 WORKSHOP_SRC_DIR = $(WORKSHOP_SUBMODULE)/workshop
 
 SERIAL_TEST_DIR = $(SERIAL_SUBMODULE)/serial_test
 SERIAL_TEST_E2E_DIR = $(SERIAL_TEST_DIR)/e2e
+
+MMC_TEST_DIR = $(MMC_SUBMODULE)/mmc_test
+MMC_TEST_E2E_DIR = $(MMC_TEST_DIR)/e2e
+
+# SoCs / SoMs.
+IMX8MM_BOARD = imx8mm
 
 # =================================
 # Build artifacts
@@ -54,6 +62,10 @@ PLAYGROUND_LOADER_IMG = $(PLAYGROUND_BUILD_DIR)/loader.img
 # Serial Driver
 SERIAL_BUILD_DIR = $(SERIAL_SRC_DIR)/build
 SERIAL_LOADER_IMG = $(SERIAL_BUILD_DIR)/loader.img
+
+# MMC Driver
+MMC_BUILD_DIR = $(MMC_SRC_DIR)/build
+MMC_LOADER_IMG = $(MMC_BUILD_DIR)/loader.img
 
 # Hello World
 HELLO_BUILD_DIR = $(HELLO_SRC_DIR)/build
@@ -281,6 +293,19 @@ build-serial: \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
 
+# MMC Driver
+
+.PHONY: build-mmc
+build-mmc: \
+	build-sel4cp \
+	patch-sel4cp-sdk
+	make \
+		-C $(MMC_SRC_DIR) \
+		BUILD_DIR=$(MMC_BUILD_DIR) \
+		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
+		SEL4CP_BOARD=$(SEL4CP_BOARD) \
+		SEL4CP_CONFIG=debug
+
 # Hello World
 
 .PHONY: build-hello
@@ -307,13 +332,19 @@ build-workshop:
 # Console
 # ==================================
 
-# Ctrl + e, c, f: Hooks you up to the serial port to start sending chars.
+# Ctrl + e, c, f: Hooks you up to the serial port to start sending chars. If you
+# wait after the image is running on the device before you run this Make
+# command, you don't need to use this command.
 # Ctrl + e, c, .: Exits the console serial.
 .PHONY: console
 console:
 	ssh -t $(TS_USER_HOST) "\
 		ssh -t $(TFTP_USER_HOST) \"\
 			console -f $(BOARD)\" ; "
+
+.PHONY: console-imx8mm
+console-imx8mm:
+	$(MAKE) console BOARD=$(IMX8MM_BOARD)
 
 # ==================================
 # Run
@@ -391,6 +422,21 @@ run-hello: build-hello
 		MQ_BOARD=$(SEL4CP_BOARD) \
 		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
 		IMG_NAME="hello-world.img"
+
+# MMC Driver
+
+.PHONY: run-mmc-remote
+run-mmc-remote:
+	$(MAKE) remote MAKE_CMD="run-mmc"
+
+# To test sending characters to the mmc device, make sure to run `make
+# console-imx8mm` in a separate Terminal.
+.PHONY: run-mmc
+run-mmc: build-mmc
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(SEL4CP_BOARD) \
+		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
+		IMG_NAME="sddf-mmc.img"
 
 # Workshop
 

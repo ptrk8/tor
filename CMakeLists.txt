@@ -15,6 +15,7 @@ add_library(lib_sel4cp_zcu102 INTERFACE)
 target_include_directories(lib_sel4cp_zcu102 INTERFACE ${CMAKE_SOURCE_DIR}/sel4cp/release/sel4cp-sdk-1.2.6/board/zcu102/debug/include/)
 
 add_subdirectory(sddf-serial/)
+add_subdirectory(sddf-mmc/)
 add_subdirectory(sddf-playground/)
 add_subdirectory(hello-world/)
 add_subdirectory(sel4cp-workshop/)
