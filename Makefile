@@ -225,6 +225,7 @@ init-sddf:
 
 .PHONY: init-xavier-port-ivan
 init-xavier-port-ivan:
+	# Call the `init` Make command in the `xavier-port-ivan` submodule.
 	$(MAKE) -C $(XAVIER_PORT_IVAN_SUBMODULE) init
 
 # ==================================
