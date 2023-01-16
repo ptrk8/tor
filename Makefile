@@ -10,6 +10,7 @@ SERIAL_SUBMODULE = $(PWD)/sddf-serial
 MMC_SUBMODULE = $(PWD)/sddf-mmc
 HELLO_SUBMODULE = $(PWD)/hello-world
 WORKSHOP_SUBMODULE = $(PWD)/sel4cp-workshop
+XAVIER_PORT_IVAN_SUBMODULE = $(PWD)/xavier-port-ivan
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
@@ -221,6 +222,10 @@ fix-sel4:
 .PHONY: init-sddf
 init-sddf:
 	# Nothing needs to be done for now.
+
+.PHONY: init-xavier-port-ivan
+init-xavier-port-ivan:
+	$(MAKE) -C $(XAVIER_PORT_IVAN_SUBMODULE) init
 
 # ==================================
 # Build
