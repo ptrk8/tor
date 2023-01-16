@@ -133,6 +133,11 @@ clean-serial:
 	rm -rf $(SERIAL_BUILD_DIR)
 	rm -rf $(SERIAL_LOADER_IMG)
 
+.PHONY: clean-mmc
+clean-mmc:
+	rm -rf $(MMC_BUILD_DIR)
+	rm -rf $(MMC_LOADER_IMG)
+
 .PHONY: clean-hello
 clean-hello:
 	rm -rf $(HELLO_BUILD_DIR)
@@ -435,7 +440,7 @@ run-mmc-remote:
 run-mmc: build-mmc
 	$(MAKE) run-img-on-mq \
 		MQ_BOARD=$(SEL4CP_BOARD) \
-		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
+		PATH_TO_LOADER_IMG=$(MMC_LOADER_IMG) \
 		IMG_NAME="sddf-mmc.img"
 
 # Workshop
