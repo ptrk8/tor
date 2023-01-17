@@ -339,6 +339,14 @@ build-workshop:
 		build-part3 \
 		PWD=$(WORKSHOP_SUBMODULE)
 
+# Ivan's port.
+
+.PHONY: build-xavier-port-ivan
+build-xavier-port-ivan:
+	$(MAKE) \
+		-C $(XAVIER_PORT_IVAN_SUBMODULE) \
+		build
+
 # ==================================
 # Console
 # ==================================
