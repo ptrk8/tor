@@ -528,20 +528,20 @@ mq-getlock-imx8mm:
 # ==================================
 
 # Use Ctrl + A, K to exit `screen`.
-.PHONY: connect-jetson
-connect-jetson:
+.PHONY: connect-device
+connect-device:
 	screen $(DEVICE) 115200
 
 # Connects to the Uni Jetson Xavier device's UART interface.
 connect-jetson-uart-uni:
-	$(MAKE) connect-jetson DEVICE="/dev/tty.usbserial-AB0LZKAE"
+	$(MAKE) connect-device DEVICE="/dev/tty.usbserial-AB0LZKAE"
 
 # Connects to the Home Jetson Xavier device's UART interface.
 connect-jetson-uart-home:
-	$(MAKE) connect-jetson DEVICE="/dev/tty.usbserial-A50285BI"
+	$(MAKE) connect-device DEVICE="/dev/tty.usbserial-A50285BI"
 
 # Connects to the Home Jetson Xavier device's USB Type-C serial interface.
 connect-jetson-typec-home:
-	$(MAKE) connect-jetson DEVICE="/dev/tty.usbmodem14221220642083"
+	$(MAKE) connect-device DEVICE="/dev/tty.usbmodem14221220642083"
 
 
