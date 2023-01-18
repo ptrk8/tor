@@ -523,6 +523,25 @@ mq-getlock:
 mq-getlock-imx8mm:
 	$(MAKE) mq-getlock BOARD="imx8mm"
 
+# ==================================
+# Nvidia Jetson Xavier Port
+# ==================================
 
+# Use Ctrl + A, K to exit `screen`.
+.PHONY: connect-jetson
+connect-jetson:
+	screen $(DEVICE) 115200
+
+# Connects to the Uni Jetson Xavier device's UART interface.
+connect-jetson-uart-uni:
+	$(MAKE) connect-jetson DEVICE="/dev/tty.usbserial-AB0LZKAE"
+
+# Connects to the Home Jetson Xavier device's UART interface.
+connect-jetson-uart-home:
+	$(MAKE) connect-jetson DEVICE="/dev/tty.usbserial-A50285BI"
+
+# Connects to the Home Jetson Xavier device's USB Type-C serial interface.
+connect-jetson-typec-home:
+	$(MAKE) connect-jetson DEVICE="/dev/tty.usbmodem14221220642083"
 
 
