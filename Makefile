@@ -75,6 +75,10 @@ HELLO_LOADER_IMG = $(HELLO_BUILD_DIR)/loader.img
 # Workshop
 WORKSHOP_BUILD_DIR = $(WORKSHOP_SRC_DIR)/build
 
+# Ivan's Xavier Port
+XAVIER_PORT_IVAN_BUILD_DIR = $(XAVIER_PORT_IVAN_SUBMODULE)/build
+XAVIER_PORT_IVAN_SEL4TEST_IMG = $(XAVIER_PORT_IVAN_BUILD_DIR)/images/sel4test-driver-image-arm-xavier
+
 # =================================
 # Configure CLion
 # =================================
@@ -371,10 +375,18 @@ console-imx8mm:
 
 MQ_COMPLETION_TEXT ?= something-obscure
 
+# Copies a file to the remote TS server (Duvel).
+.PHONY: scp-file-to-ts
+scp-file-to-ts:
+	scp $(SRC_PATH) $(TS_USER_HOST):$(DST_PATH)
+
 .PHONY: run-img-on-mq
 run-img-on-mq:
 	# Copy the loader image to the TS server.
-	scp $(PATH_TO_LOADER_IMG) $(TS_USER_HOST):~/Downloads/$(IMG_NAME)
+	#scp $(PATH_TO_LOADER_IMG) $(TS_USER_HOST):~/Downloads/$(IMG_NAME)
+	$(MAKE) scp-file-to-ts \
+		SRC_PATH=$(PATH_TO_LOADER_IMG) \
+		DST_PATH=~/Downloads/$(IMG_NAME)
 	# Run the loader image on the TS server.
 	ssh -t $(TS_USER_HOST) "\
 		bash -ilc 'mq.sh run -c \"$(MQ_COMPLETION_TEXT)\" -l output -s $(MQ_BOARD) -f ~/Downloads/$(IMG_NAME)' ; "
@@ -465,6 +477,17 @@ run-workshop:
 		-C $(WORKSHOP_SUBMODULE) \
 		run-part3 \
 		PWD=$(WORKSHOP_SUBMODULE)
+
+# Ivan's port.
+.PHONY: run-xavier-port-ivan
+run-xavier-port-ivan: build-xavier-port-ivan
+	# Copy the sel4test image to the TS server.
+	$(MAKE) scp-file-to-ts \
+		SRC_PATH=$(XAVIER_PORT_IVAN_SEL4TEST_IMG) \
+		DST_PATH=~/Downloads/sel4test-driver-image-arm-xavier
+	# Symlink /tftpboot file to the sel4test image on the TS server.
+	ssh -t $(TS_USER_HOST) "\
+		bash -ilc 'ssh -t patrickh@tftp \"ln -sf /home/patrickh/Downloads/sel4test-driver-image-arm-xavier /tftpboot/xavier1/grubnetaa64.efi\"' ; "
 
 # ==================================
 # Debug
