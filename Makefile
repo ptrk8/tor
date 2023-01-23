@@ -576,15 +576,15 @@ connect-device:
 	screen $(DEVICE) 115200
 
 # Connects to the Uni Jetson Xavier device's UART interface.
-connect-jetson-uart-uni:
+connect-xavier-uart-uni:
 	$(MAKE) connect-device DEVICE="/dev/tty.usbserial-AB0LZKAE"
 
 # Connects to the Home Jetson Xavier device's UART interface.
-connect-jetson-uart-home:
+connect-xavier-uart-home:
 	$(MAKE) connect-device DEVICE="/dev/tty.usbserial-A50285BI"
 
 # Connects to the Home Jetson Xavier device's USB Type-C serial interface.
-connect-jetson-typec-home:
+connect-xavier-typec-home:
 	$(MAKE) connect-device DEVICE="/dev/tty.usbmodem14221220642083"
 
 
