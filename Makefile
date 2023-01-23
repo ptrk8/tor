@@ -491,6 +491,10 @@ run-workshop:
 # Ivan's port.
 .PHONY: run-xavier-port-ivan
 run-xavier-port-ivan: build-xavier-port-ivan
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(XAVIER_BOARD) \
+		PATH_TO_LOADER_IMG=$(XAVIER_PORT_IVAN_SEL4TEST_IMG) \
+		IMG_NAME="sel4test-driver-image-arm-xavier.img"
 #	# Copy the sel4test image to the TS server.
 #	$(MAKE) scp-file-to-ts \
 #		SRC_PATH=$(XAVIER_PORT_IVAN_SEL4TEST_IMG) \
@@ -498,10 +502,6 @@ run-xavier-port-ivan: build-xavier-port-ivan
 #	# Symlink /tftpboot file to the sel4test image on the TS server.
 #	ssh -t $(TS_USER_HOST) "\
 #		bash -ilc 'ssh -t patrickh@tftp \"ln -sf /home/patrickh/Downloads/sel4test-driver-image-arm-xavier /tftpboot/xavier1/grubnetaa64.efi\"' ; "
-	$(MAKE) run-img-on-mq \
-		MQ_BOARD=$(XAVIER_BOARD) \
-		PATH_TO_LOADER_IMG=$(XAVIER_PORT_IVAN_SEL4TEST_IMG) \
-		IMG_NAME="sel4test-driver-image-arm-xavier.img"
 
 # ==================================
 # Debug
