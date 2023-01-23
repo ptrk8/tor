@@ -42,6 +42,7 @@ MMC_TEST_E2E_DIR = $(MMC_TEST_DIR)/e2e
 
 # SoCs / SoMs.
 IMX8MM_BOARD = imx8mm
+XAVIER_BOARD = xavier_1
 
 # =================================
 # Build artifacts
@@ -151,6 +152,11 @@ clean-hello:
 .PHONY: clean-workshop
 clean-workshop:
 	rm -rf $(WORKSHOP_BUILD_DIR)
+
+.PHONY: clean-xavier-port-ivan
+clean-xavier-port-ivan:
+	# Call the `clean` Make command in the `xavier-port-ivan` submodule.
+	$(MAKE) -C $(XAVIER_PORT_IVAN_SUBMODULE) clean
 
 # =================================
 # Push to remote servers
@@ -481,13 +487,17 @@ run-workshop:
 # Ivan's port.
 .PHONY: run-xavier-port-ivan
 run-xavier-port-ivan: build-xavier-port-ivan
-	# Copy the sel4test image to the TS server.
-	$(MAKE) scp-file-to-ts \
-		SRC_PATH=$(XAVIER_PORT_IVAN_SEL4TEST_IMG) \
-		DST_PATH=~/Downloads/sel4test-driver-image-arm-xavier
-	# Symlink /tftpboot file to the sel4test image on the TS server.
-	ssh -t $(TS_USER_HOST) "\
-		bash -ilc 'ssh -t patrickh@tftp \"ln -sf /home/patrickh/Downloads/sel4test-driver-image-arm-xavier /tftpboot/xavier1/grubnetaa64.efi\"' ; "
+#	# Copy the sel4test image to the TS server.
+#	$(MAKE) scp-file-to-ts \
+#		SRC_PATH=$(XAVIER_PORT_IVAN_SEL4TEST_IMG) \
+#		DST_PATH=~/Downloads/sel4test-driver-image-arm-xavier
+#	# Symlink /tftpboot file to the sel4test image on the TS server.
+#	ssh -t $(TS_USER_HOST) "\
+#		bash -ilc 'ssh -t patrickh@tftp \"ln -sf /home/patrickh/Downloads/sel4test-driver-image-arm-xavier /tftpboot/xavier1/grubnetaa64.efi\"' ; "
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(XAVIER_BOARD) \
+		PATH_TO_LOADER_IMG=$(XAVIER_PORT_IVAN_SEL4TEST_IMG) \
+		IMG_NAME="sel4test-driver-image-arm-xavier.img"
 
 # ==================================
 # Debug
