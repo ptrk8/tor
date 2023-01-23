@@ -558,7 +558,13 @@ mq-getlock:
 
 .PHONY: mq-getlock-imx8mm
 mq-getlock-imx8mm:
-	$(MAKE) mq-getlock BOARD="imx8mm"
+	$(MAKE) mq-getlock \
+		BOARD=$(IMX8MM_BOARD)
+
+.PHONY: mq-getlock-xavier
+mq-getlock-xavier:
+	$(MAKE) mq-getlock \
+		BOARD=$(XAVIER_BOARD)
 
 # ==================================
 # Nvidia Jetson Xavier Port
