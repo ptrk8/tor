@@ -375,6 +375,10 @@ console:
 console-imx8mm:
 	$(MAKE) console BOARD=$(IMX8MM_BOARD)
 
+.PHONY: console-xavier
+console-xavier:
+	$(MAKE) console BOARD=$(XAVIER_BOARD)
+
 # ==================================
 # Run
 # ==================================
