@@ -17,7 +17,8 @@ SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 SERVER_USER_HOST = patrick@vm_comp4961_ubuntu1804
 SERVER_REMOTE_DIR = ~/remote/$(shell hostname -s)/
 TS_USER_HOST = patrickh@login.trustworthy.systems
-TFTP_USER_HOST = patrickh@tftp.keg.cse.unsw.edu.au
+TFTP_UNSW_USER_HOST = patrickh@tftp.keg.cse.unsw.edu.au
+TFTP_HOME_USER_HOST = patrick@192.168.0.198
 
 SEL4CP_PYTHON_VENV_NAME = sel4cp_venv
 SEL4CP_PYTHON_VENV_PATH = $(SEL4CP_SUBMODULE)/$(SEL4CP_PYTHON_VENV_NAME)
@@ -368,7 +369,7 @@ build-xavier-port-ivan:
 .PHONY: console
 console:
 	ssh -t $(TS_USER_HOST) "\
-		ssh -t $(TFTP_USER_HOST) \"\
+		ssh -t $(TFTP_UNSW_USER_HOST) \"\
 			console -f $(BOARD)\" ; "
 
 .PHONY: console-imx8mm
@@ -385,16 +386,17 @@ console-xavier:
 
 MQ_COMPLETION_TEXT ?= something-obscure
 
-# Copies a file to the remote TS server (Duvel).
-.PHONY: scp-file-to-ts
-scp-file-to-ts:
-	scp $(SRC_PATH) $(TS_USER_HOST):$(DST_PATH)
+# Copies a file to a remote server.
+.PHONY: scp-file-to-server
+scp-file-to-server:
+	scp $(SRC_PATH) $(DST_USER_HOST):$(DST_PATH)
 
 .PHONY: run-img-on-mq
 run-img-on-mq:
 	# Copy the loader image to the TS server.
 	#scp $(PATH_TO_LOADER_IMG) $(TS_USER_HOST):~/Downloads/$(IMG_NAME)
-	$(MAKE) scp-file-to-ts \
+	$(MAKE) scp-file-to-server \
+		DST_USER_HOST=$(TS_USER_HOST) \
 		SRC_PATH=$(PATH_TO_LOADER_IMG) \
 		DST_PATH=~/Downloads/$(IMG_NAME)
 	# Run the loader image on the TS server.
@@ -503,6 +505,21 @@ run-xavier-port-ivan: build-xavier-port-ivan
 #	ssh -t $(TS_USER_HOST) "\
 #		bash -ilc 'ssh -t patrickh@tftp \"ln -sf /home/patrickh/Downloads/sel4test-driver-image-arm-xavier /tftpboot/xavier1/grubnetaa64.efi\"' ; "
 
+# Run Ivan's port at Home.
+# Requirements:
+# - Must be on the Home network with Ethernet cable plugged into device.
+# - Must be attached to the device via the Serial-USB cable.
+.PHONY: run-xavier-port-ivan-home
+run-xavier-port-ivan-home: build-xavier-port-ivan
+	# Copy the sel4test image to the TS server.
+	$(MAKE) scp-file-to-server \
+		DST_USER_HOST=$(TFTP_HOME_USER_HOST) \
+		SRC_PATH=$(XAVIER_PORT_IVAN_SEL4TEST_IMG) \
+		DST_PATH=~/Downloads/sel4test-driver-image-arm-xavier
+	# Symlink /tftpboot/xavier/image.efi file to to the file we just scp-ed to the server's ~/Downloads.
+	ssh -t $(TFTP_HOME_USER_HOST) "\
+		bash -ilc 'ln -sf /home/patrick/Downloads/sel4test-driver-image-arm-xavier /tftpboot/xavier/image.efi' ; "
+
 # ==================================
 # Debug
 # ==================================
@@ -567,7 +584,7 @@ mq-getlock-xavier:
 		BOARD=$(XAVIER_BOARD)
 
 # ==================================
-# Nvidia Jetson Xavier Port
+# Connect to Nvidia Jetson Xavier Serial Port
 # ==================================
 
 # Use Ctrl + A, K to exit `screen`.
