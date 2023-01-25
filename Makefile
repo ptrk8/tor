@@ -150,6 +150,7 @@ clean-remote: push-home
 .PHONY: clean
 clean: \
 	clean-sel4cp \
+	clean-sel4cp-patrick \
 	clean-sddf \
 	clean-serial \
 	clean-hello \
@@ -161,6 +162,13 @@ clean-sel4cp:
 	rm -rf $(SEL4CP_RELEASE_DIR)
 	rm -rf $(SEL4CP_BUILD_DIR)
 	rm -rf $(SEL4CP_SDK_DIR)
+
+.PHONY: clean-sel4cp-patrick
+clean-sel4cp-patrick:
+	rm -rf $(SEL4CP_PATRICK_PYTHON_VENV_PATH)
+	rm -rf $(SEL4CP_PATRICK_RELEASE_DIR)
+	rm -rf $(SEL4CP_PATRICK_BUILD_DIR)
+	rm -rf $(SEL4CP_PATRICK_SDK_DIR)
 
 .PHONY: clean-sddf
 clean-sddf:
@@ -257,9 +265,9 @@ init-sel4cp:
 # $ make remote MAKE_CMD="init-sel4cp-patrick"
 .PHONY: init-sel4cp-patrick
 init-sel4cp-patrick:
-	# Checkout Ivan's sel4cp "rpi3b_support" branch.
+	# Checkout "rpi3b_odroidc2_support" branch.
 	cd $(SEL4CP_PATRICK_SUBMODULE) && \
-		  git checkout rpi3b_support
+		  git checkout rpi3b_odroidc2_support
 	# Create Python Virtual Environment
 	python3.9 -m venv $(SEL4CP_PATRICK_PYTHON_VENV_PATH)
 	# Upgrade pip, setuptools and wheel.
