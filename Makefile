@@ -332,15 +332,15 @@ build-mmc: \
 
 # Hello World
 
-.PHONY: build-hello
-build-hello: \
+.PHONY: build-hello-imx8mm
+build-hello-imx8mm: \
 	build-sel4cp \
 	patch-sel4cp-sdk
 	make \
 		-C $(HELLO_SRC_DIR) \
 		BUILD_DIR=$(HELLO_BUILD_DIR) \
 		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
-		SEL4CP_BOARD=$(SEL4CP_BOARD) \
+		SEL4CP_BOARD=$(IMX8MM_BOARD) \
 		SEL4CP_CONFIG=debug
 
 # Workshop
@@ -465,14 +465,10 @@ console-serial:
 
 # Hello World
 
-.PHONY: run-hello-remote
-run-hello-remote:
-	$(MAKE) remote MAKE_CMD="run-hello"
-
-.PHONY: run-hello
-run-hello: build-hello
+.PHONY: run-hello-imx8mm
+run-hello-imx8mm: build-hello-imx8mm
 	$(MAKE) run-img-on-mq \
-		MQ_BOARD=$(SEL4CP_BOARD) \
+		MQ_BOARD=$(IMX8MM_BOARD) \
 		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
 		IMG_NAME="hello-world.img"
 
