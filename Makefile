@@ -89,8 +89,14 @@ MMC_BUILD_DIR = $(MMC_SRC_DIR)/build
 MMC_LOADER_IMG = $(MMC_BUILD_DIR)/loader.img
 
 # Hello World
-HELLO_BUILD_DIR = $(HELLO_SRC_DIR)/build
-HELLO_LOADER_IMG = $(HELLO_BUILD_DIR)/loader.img
+HELLO_BUILD_DIR_IMX8MM = $(HELLO_SRC_DIR)/build-imx8mm
+HELLO_LOADER_IMG_IMX8MM = $(HELLO_BUILD_DIR_IMX8MM)/loader.img
+
+HELLO_BUILD_DIR_RPI3B = $(HELLO_SRC_DIR)/build-rpi3b
+HELLO_LOADER_IMG_RPI3B = $(HELLO_BUILD_DIR_RPI3B)/loader.img
+
+HELLO_BUILD_DIR_ODROIDC2 = $(HELLO_SRC_DIR)/build-odroidc2
+HELLO_LOADER_IMG_ODROIDC2 = $(HELLO_BUILD_DIR_ODROIDC2)/loader.img
 
 # Workshop
 WORKSHOP_BUILD_DIR = $(WORKSHOP_SRC_DIR)/build
@@ -154,7 +160,9 @@ clean: \
 	clean-sel4cp-patrick \
 	clean-sddf \
 	clean-serial \
-	clean-hello \
+	clean-hello-imx8mm \
+	clean-hello-rpi3b \
+	clean-hello-odroidc2 \
 	clean-workshop \
 
 .PHONY: clean-sel4cp
@@ -186,10 +194,20 @@ clean-mmc:
 	rm -rf $(MMC_BUILD_DIR)
 	rm -rf $(MMC_LOADER_IMG)
 
-.PHONY: clean-hello
-clean-hello:
-	rm -rf $(HELLO_BUILD_DIR)
-	rm -rf $(HELLO_LOADER_IMG)
+.PHONY: clean-hello-imx8mm
+clean-hello-imx8mm:
+	rm -rf $(HELLO_BUILD_DIR_IMX8MM)
+	rm -rf $(HELLO_LOADER_IMG_IMX8MM)
+
+.PHONY: clean-hello-rpi3b
+clean-hello-rpi3b:
+	rm -rf $(HELLO_BUILD_DIR_RPI3B)
+	rm -rf $(HELLO_LOADER_IMG_RPI3B)
+
+.PHONY: clean-hello-odroidc2
+clean-hello-odroidc2:
+	rm -rf $(HELLO_BUILD_DIR_ODROIDC2)
+	rm -rf $(HELLO_LOADER_IMG_ODROIDC2)
 
 .PHONY: clean-workshop
 clean-workshop:
@@ -415,7 +433,7 @@ build-hello-imx8mm: \
 	patch-sel4cp-sdk
 	make \
 		-C $(HELLO_SRC_DIR) \
-		BUILD_DIR=$(HELLO_BUILD_DIR) \
+		BUILD_DIR=$(HELLO_BUILD_DIR_IMX8MM) \
 		SEL4CP_SDK=$(SEL4CP_SDK_DIR) \
 		SEL4CP_BOARD=$(IMX8MM_BOARD) \
 		SEL4CP_CONFIG=debug
@@ -427,7 +445,7 @@ build-hello-rpi3b: \
 		SEL4CP_BOARD=$(RPI3B_BOARD)
 	$(MAKE) \
 		-C $(HELLO_SRC_DIR) \
-		BUILD_DIR=$(HELLO_BUILD_DIR) \
+		BUILD_DIR=$(HELLO_BUILD_DIR_RPI3B) \
 		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
 		SEL4CP_BOARD=$(RPI3B_BOARD) \
 		SEL4CP_CONFIG=debug
@@ -439,7 +457,7 @@ build-hello-odroidc2: \
 		SEL4CP_BOARD=$(ODROIDC2_BOARD)
 	$(MAKE) \
 		-C $(HELLO_SRC_DIR) \
-		BUILD_DIR=$(HELLO_BUILD_DIR) \
+		BUILD_DIR=$(HELLO_BUILD_DIR_ODROIDC2) \
 		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
 		SEL4CP_BOARD=$(ODROIDC2_BOARD) \
 		SEL4CP_CONFIG=debug
@@ -574,22 +592,25 @@ console-serial:
 run-hello-imx8mm: build-hello-imx8mm
 	$(MAKE) run-img-on-mq \
 		MQ_BOARD=$(IMX8MM_BOARD) \
-		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
-		IMG_NAME="hello-world-imx8mm.img"
+		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG_IMX8MM) \
+		IMG_NAME="hello-world-imx8mm.img" \
+		MQ_COMPLETION_TEXT="hello, world"
 
 .PHONY: run-hello-rpi3b
 run-hello-rpi3b: build-hello-rpi3b
 	$(MAKE) run-img-on-mq \
 		MQ_BOARD="rpi3" \
-		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
-		IMG_NAME="hello-world-rpi3b.img"
+		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG_RPI3B) \
+		IMG_NAME="hello-world-rpi3b.img" \
+		MQ_COMPLETION_TEXT="hello, world"
 
 .PHONY: run-hello-odroidc2
 run-hello-odroidc2: build-hello-odroidc2
 	$(MAKE) run-img-on-mq \
 		MQ_BOARD=$(ODROIDC2_BOARD) \
-		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
-		IMG_NAME="hello-world-odroidc2.img"
+		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG_ODROIDC2) \
+		IMG_NAME="hello-world-odroidc2.img" \
+		MQ_COMPLETION_TEXT="hello, world"
 
 # MMC Driver
 
