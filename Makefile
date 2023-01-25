@@ -55,7 +55,7 @@ MMC_TEST_E2E_DIR = $(MMC_TEST_DIR)/e2e
 IMX8MM_BOARD = imx8mm
 XAVIER_BOARD = xavier_1
 RPI3B_BOARD = rpi3b
-RPI4B_BOARD = rpi4B
+RPI4B_BOARD = rpi4b
 ODROIDC2_BOARD = odroidc2
 ZCU102_BOARD = zcu102
 
@@ -101,6 +101,9 @@ HELLO_LOADER_IMG_ODROIDC2 = $(HELLO_BUILD_DIR_ODROIDC2)/loader.img
 
 HELLO_BUILD_DIR_ZCU102 = $(HELLO_SRC_DIR)/build-zcu102
 HELLO_LOADER_IMG_ZCU102 = $(HELLO_BUILD_DIR_ZCU102)/loader.img
+
+HELLO_BUILD_DIR_RPI4B = $(HELLO_SRC_DIR)/build-rpi4b
+HELLO_LOADER_IMG_RPI4B = $(HELLO_BUILD_DIR_RPI4B)/loader.img
 
 # Workshop
 WORKSHOP_BUILD_DIR = $(WORKSHOP_SRC_DIR)/build
@@ -294,9 +297,9 @@ init-sel4cp:
 # $ make remote MAKE_CMD="init-sel4cp-patrick"
 .PHONY: init-sel4cp-patrick
 init-sel4cp-patrick:
-	# Checkout "rpi3b_odroidc2_support" branch.
+	# Checkout "rpi4b_rpi3b_odroidc2_support" branch.
 	cd $(SEL4CP_PATRICK_SUBMODULE) && \
-		  git checkout rpi3b_odroidc2_support
+		  git checkout rpi4b_rpi3b_odroidc2_support
 	# Create Python Virtual Environment
 	python3.9 -m venv $(SEL4CP_PATRICK_PYTHON_VENV_PATH)
 	# Upgrade pip, setuptools and wheel.
@@ -482,6 +485,18 @@ build-hello-zcu102: \
 		BUILD_DIR=$(HELLO_BUILD_DIR_ZCU102) \
 		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
 		SEL4CP_BOARD=$(ZCU102_BOARD) \
+		SEL4CP_CONFIG=debug
+
+.PHONY: build-hello-rpi4b
+build-hello-rpi4b: \
+	build-sel4cp-patrick
+	$(MAKE) patch-sel4cp-patrick-sdk \
+		SEL4CP_BOARD=$(RPI4B_BOARD)
+	$(MAKE) \
+		-C $(HELLO_SRC_DIR) \
+		BUILD_DIR=$(HELLO_BUILD_DIR_RPI4B) \
+		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
+		SEL4CP_BOARD=$(RPI4B_BOARD) \
 		SEL4CP_CONFIG=debug
 
 # Workshop
