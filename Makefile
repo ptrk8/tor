@@ -684,6 +684,11 @@ mq-getlock-xavier:
 	$(MAKE) mq-getlock \
 		BOARD=$(XAVIER_BOARD)
 
+.PHONY: mq-systems
+mq-systems:
+	ssh -t $(TS_USER_HOST) "\
+		bash -ilc 'mq.sh systems' ; "
+
 # ==================================
 # Connect to Nvidia Jetson Xavier Serial Port
 # ==================================
