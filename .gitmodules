@@ -19,3 +19,10 @@
 [submodule "sel4cp-patrick"]
 	path = sel4cp-patrick
 	url = git@github.com:patrick-forks/sel4cp-patrick.git
+[submodule "uboot-patrick"]
+	path = uboot-patrick
+	url = git@github.com:patrick-forks/uboot-patrick.git
+[submodule "uboot-rpi4b"]
+	path = uboot-rpi4b
+	url = git@github.com:patrick-forks/uboot-patrick.git
+	branch = patrick

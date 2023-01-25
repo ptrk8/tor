@@ -12,6 +12,7 @@ MMC_SUBMODULE = $(PWD)/sddf-mmc
 HELLO_SUBMODULE = $(PWD)/hello-world
 WORKSHOP_SUBMODULE = $(PWD)/sel4cp-workshop
 XAVIER_PORT_IVAN_SUBMODULE = $(PWD)/xavier-port-ivan
+UBOOT_RPI4B_SUBMODULE = $(PWD)/uboot-rpi4b
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
@@ -331,6 +332,15 @@ init-xavier-port-ivan:
 	# Call the `init` Make command in the `xavier-port-ivan` submodule.
 	$(MAKE) -C $(XAVIER_PORT_IVAN_SUBMODULE) init
 
+.PHONY: init-uboot-rpi4b
+init-uboot-rpi4b:
+# Only build the Core Platform if the SDK doesn't exist already.
+ifeq ("$(wildcard $(UBOOT_RPI4B_SUBMODULE))","")
+	git submodule add -b patrick -- git@github.com:patrick-forks/uboot-patrick.git uboot-rpi4b
+else
+	@echo "No need to initialise RPI4B U-Boot submodule since it already exists."
+endif
+
 # ==================================
 # Build
 # ==================================
@@ -515,6 +525,20 @@ build-xavier-port-ivan:
 	$(MAKE) \
 		-C $(XAVIER_PORT_IVAN_SUBMODULE) \
 		build
+
+# uboot-rpi4b.
+
+# This command should only be run remotely since it will not working locally.
+# make remote MAKE_CMD="build-uboot-rpi4b"
+.PHONY: build-uboot-rpi4b
+build-uboot-rpi4b:
+	$(MAKE) \
+		-C $(UBOOT_RPI4B_SUBMODULE) \
+		CROSS_COMPILE=aarch64-linux-gnu- \
+		rpi_4_defconfig
+	$(MAKE) \
+		-C $(UBOOT_RPI4B_SUBMODULE) \
+		CROSS_COMPILE=aarch64-linux-gnu-
 
 # ==================================
 # Console
