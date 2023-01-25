@@ -4,6 +4,7 @@ RESOURCES_DIR = $(PWD)/resources
 
 SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
+SEL4CP_IVAN_SUBMODULE = $(PWD)/sel4cp-ivan
 SDDF_SUBMODULE = $(PWD)/sddf
 PLAYGROUND_SUBMODULE = $(PWD)/sddf-playground
 SERIAL_SUBMODULE = $(PWD)/sddf-serial
@@ -20,11 +21,20 @@ TS_USER_HOST = patrickh@login.trustworthy.systems
 TFTP_UNSW_USER_HOST = patrickh@tftp.keg.cse.unsw.edu.au
 TFTP_HOME_USER_HOST = patrick@192.168.0.198
 
+# =================================
+# Python Virtual Environments.
+# =================================
+
 SEL4CP_PYTHON_VENV_NAME = sel4cp_venv
 SEL4CP_PYTHON_VENV_PATH = $(SEL4CP_SUBMODULE)/$(SEL4CP_PYTHON_VENV_NAME)
 SEL4CP_PYTHON_VENV_PYTHON = $(SEL4CP_PYTHON_VENV_PATH)/bin/python
 SEL4CP_PYTHON_REQUIREMENTS = $(SEL4CP_SUBMODULE)/requirements.txt
 SEL4CP_BOARD = imx8mm
+
+SEL4CP_IVAN_PYTHON_VENV_NAME = sel4cp_ivan_venv
+SEL4CP_IVAN_PYTHON_VENV_PATH = $(SEL4CP_IVAN_SUBMODULE)/$(SEL4CP_IVAN_PYTHON_VENV_NAME)
+SEL4CP_IVAN_PYTHON_VENV_PYTHON = $(SEL4CP_IVAN_PYTHON_VENV_PATH)/bin/python
+SEL4CP_IVAN_PYTHON_REQUIREMENTS = $(SEL4CP_IVAN_SUBMODULE)/requirements.txt
 
 LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 
@@ -44,7 +54,7 @@ MMC_TEST_E2E_DIR = $(MMC_TEST_DIR)/e2e
 # SoCs / SoMs.
 IMX8MM_BOARD = imx8mm
 XAVIER_BOARD = xavier_1
-RPI3_BOARD = rpi3
+RPI3B_BOARD = rpi3b
 RPI4B_BOARD = rpi4B
 
 # =================================
@@ -55,6 +65,11 @@ RPI4B_BOARD = rpi4B
 SEL4CP_RELEASE_DIR = $(SEL4CP_SUBMODULE)/release
 SEL4CP_BUILD_DIR = $(SEL4CP_SUBMODULE)/build
 SEL4CP_SDK_DIR = $(SEL4CP_RELEASE_DIR)/sel4cp-sdk-1.2.6
+
+# sel4cp-ivan
+SEL4CP_IVAN_RELEASE_DIR = $(SEL4CP_IVAN_SUBMODULE)/release
+SEL4CP_IVAN_BUILD_DIR = $(SEL4CP_IVAN_SUBMODULE)/build
+SEL4CP_IVAN_SDK_DIR = $(SEL4CP_IVAN_RELEASE_DIR)/sel4cp-sdk-1.2.6
 
 # sDDF
 SDDF_BUILD_DIR = $(SDDF_SRC_DIR)/build
@@ -88,9 +103,11 @@ XAVIER_PORT_IVAN_SEL4TEST_IMG = $(XAVIER_PORT_IVAN_BUILD_DIR)/images/sel4test-dr
 # =================================
 
 # Configures environment for CLion.
+# Run this AFTER you have built sel4cp.
 .PHONY: setup-for-ide
 setup-for-ide: \
-	sync-sel4cp-build-artifacts
+	sync-sel4cp-build-artifacts \
+	sync-sel4cp-ivan-build-artifacts \
 
 # Run this after you have built sel4cp.
 # This copies the build artifacts from the remote machine to the local machine.
@@ -106,6 +123,19 @@ sync-sel4cp-build-artifacts:
 		-a \
 		--delete \
 		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp/build/ $(SEL4CP_BUILD_DIR)
+
+.PHONY: sync-sel4cp-ivan-build-artifacts
+sync-sel4cp-ivan-build-artifacts:
+	rsync \
+		-a \
+		--delete \
+		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp-ivan/release/ \
+		$(SEL4CP_IVAN_RELEASE_DIR)
+	rsync \
+		-a \
+		--delete \
+		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp-ivan/build/ \
+		$(SEL4CP_IVAN_BUILD_DIR)
 
 # =================================
 # Clean
@@ -172,6 +202,7 @@ push-home:
 	rsync -a \
  			--delete \
  			--exclude "$(SEL4CP_PYTHON_VENV_NAME)" \
+ 			--exclude "$(SEL4CP_IVAN_PYTHON_VENV_NAME)" \
  			--exclude "build" \
  			--exclude "release" \
  			./ $(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)
@@ -193,6 +224,7 @@ remote: push-home
 .PHONY: init
 init: \
 	init-sel4cp \
+	init-sel4cp-ivan \
 	init-sel4 \
 	init-sddf \
 
@@ -203,6 +235,8 @@ init: \
 init-remote: fix-sel4
 	$(MAKE) remote MAKE_CMD="init"
 
+# The following should be run using:
+# $ make remote MAKE_CMD="init-sel4cp"
 .PHONY: init-sel4cp
 init-sel4cp:
 	# Checkout Lucy's sel4cp PR.
@@ -219,7 +253,23 @@ init-sel4cp:
 	# Install missing Python requirements into Virtual Environment.
 	$(SEL4CP_PYTHON_VENV_PYTHON) -m pip install six future
 
-# Make sure you use this seL4 commit hash: https://github.com/BreakawayConsulting/sel4cp#sel4-version
+# The following should be run using:
+# $ make remote MAKE_CMD="init-sel4cp-ivan"
+.PHONY: init-sel4cp-ivan
+init-sel4cp-ivan:
+	# Checkout Ivan's sel4cp "rpi3b_support" branch.
+	cd $(SEL4CP_IVAN_SUBMODULE) && \
+		  git checkout rpi3b_support
+	# Create Python Virtual Environment
+	python3.9 -m venv $(SEL4CP_IVAN_PYTHON_VENV_PATH)
+	# Upgrade pip, setuptools and wheel.
+	$(SEL4CP_IVAN_PYTHON_VENV_PYTHON) -m pip install --upgrade pip setuptools wheel
+	# Install Python requirements into Virtual Environment.
+	$(SEL4CP_IVAN_PYTHON_VENV_PYTHON) -m pip install -r $(SEL4CP_IVAN_PYTHON_REQUIREMENTS)
+	# Install missing Python requirements into Virtual Environment.
+	$(SEL4CP_IVAN_PYTHON_VENV_PYTHON) -m pip install six future
+
+# The seL4 commit hash we checked out is from here: https://github.com/BreakawayConsulting/sel4cp#sel4-version
 .PHONY: init-sel4
 init-sel4:
 	cd $(SEL4_SUBMODULE) && \
@@ -266,6 +316,16 @@ else
 	@echo "No need to build Core Platform since SDK already exists"
 endif
 
+.PHONY: build-sel4cp-ivan
+build-sel4cp-ivan:
+# Only build the Core Platform if the SDK doesn't exist already.
+ifeq ("$(wildcard $(SEL4CP_IVAN_SDK_DIR))","")
+	cd $(SEL4CP_IVAN_SUBMODULE) && \
+		$(SEL4CP_IVAN_PYTHON_VENV_PYTHON) build_sdk.py --sel4="$(SEL4_SUBMODULE)"
+else
+	@echo "No need to build Core Platform since SDK already exists"
+endif
+
 # This patch is necessary since the sDDF expects a libc via the -lc linker flag
 # specified by Lucy.
 .PHONY: patch-sel4cp-sdk
@@ -277,6 +337,14 @@ patch-sel4cp-sdk:
 		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/debug/lib/libc.a
 	cp -n $(LUCY_LIBC) \
 		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/release/lib/libc.a
+
+.PHONY: patch-sel4cp-ivan-sdk
+patch-sel4cp-ivan-sdk:
+	# The -n ensures we don't overwrite an existing file.
+	cp -n $(LUCY_LIBC) \
+		$(SEL4CP_IVAN_SDK_DIR)/board/$(SEL4CP_BOARD)/debug/lib/libc.a
+	cp -n $(LUCY_LIBC) \
+		$(SEL4CP_IVAN_SDK_DIR)/board/$(SEL4CP_BOARD)/release/lib/libc.a
 
 # sDDF
 
@@ -343,6 +411,18 @@ build-hello-imx8mm: \
 		SEL4CP_BOARD=$(IMX8MM_BOARD) \
 		SEL4CP_CONFIG=debug
 
+.PHONY: build-hello-rpi3b
+build-hello-rpi3b: \
+	build-sel4cp-ivan
+	$(MAKE) patch-sel4cp-ivan-sdk \
+		SEL4CP_BOARD=$(RPI3B_BOARD)
+	$(MAKE) \
+		-C $(HELLO_SRC_DIR) \
+		BUILD_DIR=$(HELLO_BUILD_DIR) \
+		SEL4CP_SDK=$(SEL4CP_IVAN_SDK_DIR) \
+		SEL4CP_BOARD=$(RPI3B_BOARD) \
+		SEL4CP_CONFIG=debug
+
 # Workshop
 
 .PHONY: build-workshop
@@ -382,9 +462,9 @@ console-imx8mm:
 console-xavier:
 	$(MAKE) console BOARD=$(XAVIER_BOARD)
 
-.PHONY: console-rpi3
-console-rpi3:
-	$(MAKE) console BOARD=$(RPI3_BOARD)
+.PHONY: console-rpi3b
+console-rpi3b:
+	$(MAKE) console BOARD="rpi3"
 
 .PHONY: console-rpi4b
 console-rpi4b:
@@ -469,6 +549,13 @@ console-serial:
 run-hello-imx8mm: build-hello-imx8mm
 	$(MAKE) run-img-on-mq \
 		MQ_BOARD=$(IMX8MM_BOARD) \
+		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
+		IMG_NAME="hello-world.img"
+
+.PHONY: run-hello-rpi3b
+run-hello-rpi3b: build-hello-rpi3b
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD="rpi3" \
 		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG) \
 		IMG_NAME="hello-world.img"
 
