@@ -16,6 +16,3 @@
 [submodule "xavier-port-ivan"]
 	path = xavier-port-ivan
 	url = git@github.com:patrick-forks/xavier-port-ivan.git
-[submodule "sel4cp-ivan"]
-	path = sel4cp-ivan
-	url = git@github.com:patrick-forks/sel4cp-ivan.git
