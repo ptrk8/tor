@@ -4,7 +4,7 @@ RESOURCES_DIR = $(PWD)/resources
 
 SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
-SEL4CP_IVAN_SUBMODULE = $(PWD)/sel4cp-ivan
+SEL4CP_PATRICK_SUBMODULE = $(PWD)/sel4cp-patrick
 SDDF_SUBMODULE = $(PWD)/sddf
 PLAYGROUND_SUBMODULE = $(PWD)/sddf-playground
 SERIAL_SUBMODULE = $(PWD)/sddf-serial
@@ -31,10 +31,10 @@ SEL4CP_PYTHON_VENV_PYTHON = $(SEL4CP_PYTHON_VENV_PATH)/bin/python
 SEL4CP_PYTHON_REQUIREMENTS = $(SEL4CP_SUBMODULE)/requirements.txt
 SEL4CP_BOARD = imx8mm
 
-SEL4CP_IVAN_PYTHON_VENV_NAME = sel4cp_ivan_venv
-SEL4CP_IVAN_PYTHON_VENV_PATH = $(SEL4CP_IVAN_SUBMODULE)/$(SEL4CP_IVAN_PYTHON_VENV_NAME)
-SEL4CP_IVAN_PYTHON_VENV_PYTHON = $(SEL4CP_IVAN_PYTHON_VENV_PATH)/bin/python
-SEL4CP_IVAN_PYTHON_REQUIREMENTS = $(SEL4CP_IVAN_SUBMODULE)/requirements.txt
+SEL4CP_PATRICK_PYTHON_VENV_NAME = sel4cp_patrick_venv
+SEL4CP_PATRICK_PYTHON_VENV_PATH = $(SEL4CP_PATRICK_SUBMODULE)/$(SEL4CP_PATRICK_PYTHON_VENV_NAME)
+SEL4CP_PATRICK_PYTHON_VENV_PYTHON = $(SEL4CP_PATRICK_PYTHON_VENV_PATH)/bin/python
+SEL4CP_PATRICK_PYTHON_REQUIREMENTS = $(SEL4CP_PATRICK_SUBMODULE)/requirements.txt
 
 LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 
@@ -66,10 +66,10 @@ SEL4CP_RELEASE_DIR = $(SEL4CP_SUBMODULE)/release
 SEL4CP_BUILD_DIR = $(SEL4CP_SUBMODULE)/build
 SEL4CP_SDK_DIR = $(SEL4CP_RELEASE_DIR)/sel4cp-sdk-1.2.6
 
-# sel4cp-ivan
-SEL4CP_IVAN_RELEASE_DIR = $(SEL4CP_IVAN_SUBMODULE)/release
-SEL4CP_IVAN_BUILD_DIR = $(SEL4CP_IVAN_SUBMODULE)/build
-SEL4CP_IVAN_SDK_DIR = $(SEL4CP_IVAN_RELEASE_DIR)/sel4cp-sdk-1.2.6
+# sel4cp-patrick
+SEL4CP_PATRICK_RELEASE_DIR = $(SEL4CP_PATRICK_SUBMODULE)/release
+SEL4CP_PATRICK_BUILD_DIR = $(SEL4CP_PATRICK_SUBMODULE)/build
+SEL4CP_PATRICK_SDK_DIR = $(SEL4CP_PATRICK_RELEASE_DIR)/sel4cp-sdk-1.2.6
 
 # sDDF
 SDDF_BUILD_DIR = $(SDDF_SRC_DIR)/build
@@ -107,7 +107,7 @@ XAVIER_PORT_IVAN_SEL4TEST_IMG = $(XAVIER_PORT_IVAN_BUILD_DIR)/images/sel4test-dr
 .PHONY: setup-for-ide
 setup-for-ide: \
 	sync-sel4cp-build-artifacts \
-	sync-sel4cp-ivan-build-artifacts \
+	sync-sel4cp-patrick-build-artifacts \
 
 # Run this after you have built sel4cp.
 # This copies the build artifacts from the remote machine to the local machine.
@@ -124,18 +124,18 @@ sync-sel4cp-build-artifacts:
 		--delete \
 		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp/build/ $(SEL4CP_BUILD_DIR)
 
-.PHONY: sync-sel4cp-ivan-build-artifacts
-sync-sel4cp-ivan-build-artifacts:
+.PHONY: sync-sel4cp-patrick-build-artifacts
+sync-sel4cp-patrick-build-artifacts:
 	rsync \
 		-a \
 		--delete \
-		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp-ivan/release/ \
-		$(SEL4CP_IVAN_RELEASE_DIR)
+		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp-patrick/release/ \
+		$(SEL4CP_PATRICK_RELEASE_DIR)
 	rsync \
 		-a \
 		--delete \
-		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp-ivan/build/ \
-		$(SEL4CP_IVAN_BUILD_DIR)
+		$(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)/sel4cp-patrick/build/ \
+		$(SEL4CP_PATRICK_BUILD_DIR)
 
 # =================================
 # Clean
@@ -202,7 +202,7 @@ push-home:
 	rsync -a \
  			--delete \
  			--exclude "$(SEL4CP_PYTHON_VENV_NAME)" \
- 			--exclude "$(SEL4CP_IVAN_PYTHON_VENV_NAME)" \
+ 			--exclude "$(SEL4CP_PATRICK_PYTHON_VENV_NAME)" \
  			--exclude "build" \
  			--exclude "release" \
  			./ $(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)
@@ -224,7 +224,7 @@ remote: push-home
 .PHONY: init
 init: \
 	init-sel4cp \
-	init-sel4cp-ivan \
+	init-sel4cp-patrick \
 	init-sel4 \
 	init-sddf \
 
@@ -254,20 +254,20 @@ init-sel4cp:
 	$(SEL4CP_PYTHON_VENV_PYTHON) -m pip install six future
 
 # The following should be run using:
-# $ make remote MAKE_CMD="init-sel4cp-ivan"
-.PHONY: init-sel4cp-ivan
-init-sel4cp-ivan:
+# $ make remote MAKE_CMD="init-sel4cp-patrick"
+.PHONY: init-sel4cp-patrick
+init-sel4cp-patrick:
 	# Checkout Ivan's sel4cp "rpi3b_support" branch.
-	cd $(SEL4CP_IVAN_SUBMODULE) && \
+	cd $(SEL4CP_PATRICK_SUBMODULE) && \
 		  git checkout rpi3b_support
 	# Create Python Virtual Environment
-	python3.9 -m venv $(SEL4CP_IVAN_PYTHON_VENV_PATH)
+	python3.9 -m venv $(SEL4CP_PATRICK_PYTHON_VENV_PATH)
 	# Upgrade pip, setuptools and wheel.
-	$(SEL4CP_IVAN_PYTHON_VENV_PYTHON) -m pip install --upgrade pip setuptools wheel
+	$(SEL4CP_PATRICK_PYTHON_VENV_PYTHON) -m pip install --upgrade pip setuptools wheel
 	# Install Python requirements into Virtual Environment.
-	$(SEL4CP_IVAN_PYTHON_VENV_PYTHON) -m pip install -r $(SEL4CP_IVAN_PYTHON_REQUIREMENTS)
+	$(SEL4CP_PATRICK_PYTHON_VENV_PYTHON) -m pip install -r $(SEL4CP_PATRICK_PYTHON_REQUIREMENTS)
 	# Install missing Python requirements into Virtual Environment.
-	$(SEL4CP_IVAN_PYTHON_VENV_PYTHON) -m pip install six future
+	$(SEL4CP_PATRICK_PYTHON_VENV_PYTHON) -m pip install six future
 
 # The seL4 commit hash we checked out is from here: https://github.com/BreakawayConsulting/sel4cp#sel4-version
 .PHONY: init-sel4
@@ -316,12 +316,12 @@ else
 	@echo "No need to build Core Platform since SDK already exists"
 endif
 
-.PHONY: build-sel4cp-ivan
-build-sel4cp-ivan:
+.PHONY: build-sel4cp-patrick
+build-sel4cp-patrick:
 # Only build the Core Platform if the SDK doesn't exist already.
-ifeq ("$(wildcard $(SEL4CP_IVAN_SDK_DIR))","")
-	cd $(SEL4CP_IVAN_SUBMODULE) && \
-		$(SEL4CP_IVAN_PYTHON_VENV_PYTHON) build_sdk.py --sel4="$(SEL4_SUBMODULE)"
+ifeq ("$(wildcard $(SEL4CP_PATRICK_SDK_DIR))","")
+	cd $(SEL4CP_PATRICK_SUBMODULE) && \
+		$(SEL4CP_PATRICK_PYTHON_VENV_PYTHON) build_sdk.py --sel4="$(SEL4_SUBMODULE)"
 else
 	@echo "No need to build Core Platform since SDK already exists"
 endif
@@ -338,13 +338,13 @@ patch-sel4cp-sdk:
 	cp -n $(LUCY_LIBC) \
 		$(SEL4CP_SDK_DIR)/board/$(SEL4CP_BOARD)/release/lib/libc.a
 
-.PHONY: patch-sel4cp-ivan-sdk
-patch-sel4cp-ivan-sdk:
+.PHONY: patch-sel4cp-patrick-sdk
+patch-sel4cp-patrick-sdk:
 	# The -n ensures we don't overwrite an existing file.
 	cp -n $(LUCY_LIBC) \
-		$(SEL4CP_IVAN_SDK_DIR)/board/$(SEL4CP_BOARD)/debug/lib/libc.a
+		$(SEL4CP_PATRICK_SDK_DIR)/board/$(SEL4CP_BOARD)/debug/lib/libc.a
 	cp -n $(LUCY_LIBC) \
-		$(SEL4CP_IVAN_SDK_DIR)/board/$(SEL4CP_BOARD)/release/lib/libc.a
+		$(SEL4CP_PATRICK_SDK_DIR)/board/$(SEL4CP_BOARD)/release/lib/libc.a
 
 # sDDF
 
@@ -413,13 +413,13 @@ build-hello-imx8mm: \
 
 .PHONY: build-hello-rpi3b
 build-hello-rpi3b: \
-	build-sel4cp-ivan
-	$(MAKE) patch-sel4cp-ivan-sdk \
+	build-sel4cp-patrick
+	$(MAKE) patch-sel4cp-patrick-sdk \
 		SEL4CP_BOARD=$(RPI3B_BOARD)
 	$(MAKE) \
 		-C $(HELLO_SRC_DIR) \
 		BUILD_DIR=$(HELLO_BUILD_DIR) \
-		SEL4CP_SDK=$(SEL4CP_IVAN_SDK_DIR) \
+		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
 		SEL4CP_BOARD=$(RPI3B_BOARD) \
 		SEL4CP_CONFIG=debug
 
