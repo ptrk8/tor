@@ -40,7 +40,12 @@ LIBS := -lsel4cp -Tsel4cp.ld
 IMAGE_FILE = $(BUILD_DIR)/loader.img
 REPORT_FILE = $(BUILD_DIR)/report.txt
 
-all: $(IMAGE_FILE)
+.PHONY: all
+all: directories $(IMAGE_FILE)
+
+# Create build directory
+directories:
+	mkdir -p $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: %.c Makefile
 	$(CC) -c $(CFLAGS) $< -o $@
