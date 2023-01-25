@@ -57,6 +57,7 @@ XAVIER_BOARD = xavier_1
 RPI3B_BOARD = rpi3b
 RPI4B_BOARD = rpi4B
 ODROIDC2_BOARD = odroidc2
+ZCU102_BOARD = zcu102
 
 # =================================
 # Build artifacts
@@ -97,6 +98,9 @@ HELLO_LOADER_IMG_RPI3B = $(HELLO_BUILD_DIR_RPI3B)/loader.img
 
 HELLO_BUILD_DIR_ODROIDC2 = $(HELLO_SRC_DIR)/build-odroidc2
 HELLO_LOADER_IMG_ODROIDC2 = $(HELLO_BUILD_DIR_ODROIDC2)/loader.img
+
+HELLO_BUILD_DIR_ZCU102 = $(HELLO_SRC_DIR)/build-zcu102
+HELLO_LOADER_IMG_ZCU102 = $(HELLO_BUILD_DIR_ZCU102)/loader.img
 
 # Workshop
 WORKSHOP_BUILD_DIR = $(WORKSHOP_SRC_DIR)/build
@@ -163,6 +167,7 @@ clean: \
 	clean-hello-imx8mm \
 	clean-hello-rpi3b \
 	clean-hello-odroidc2 \
+	clean-hello-zcu102 \
 	clean-workshop \
 
 .PHONY: clean-sel4cp
@@ -208,6 +213,11 @@ clean-hello-rpi3b:
 clean-hello-odroidc2:
 	rm -rf $(HELLO_BUILD_DIR_ODROIDC2)
 	rm -rf $(HELLO_LOADER_IMG_ODROIDC2)
+
+.PHONY: clean-hello-zcu102
+clean-hello-zcu102:
+	rm -rf $(HELLO_BUILD_DIR_ZCU102)
+	rm -rf $(HELLO_LOADER_IMG_ZCU102)
 
 .PHONY: clean-workshop
 clean-workshop:
@@ -462,6 +472,18 @@ build-hello-odroidc2: \
 		SEL4CP_BOARD=$(ODROIDC2_BOARD) \
 		SEL4CP_CONFIG=debug
 
+.PHONY: build-hello-zcu102
+build-hello-zcu102: \
+	build-sel4cp-patrick
+	$(MAKE) patch-sel4cp-patrick-sdk \
+		SEL4CP_BOARD=$(ZCU102_BOARD)
+	$(MAKE) \
+		-C $(HELLO_SRC_DIR) \
+		BUILD_DIR=$(HELLO_BUILD_DIR_ZCU102) \
+		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
+		SEL4CP_BOARD=$(ZCU102_BOARD) \
+		SEL4CP_CONFIG=debug
+
 # Workshop
 
 .PHONY: build-workshop
@@ -512,6 +534,10 @@ console-rpi4b:
 .PHONY: console-odroidc2
 console-odroidc2:
 	$(MAKE) console BOARD="odroid-c2"
+
+.PHONY: console-zcu102
+console-zcu102:
+	$(MAKE) console BOARD=$(ZCU102_BOARD)
 
 # ==================================
 # Run
@@ -610,6 +636,14 @@ run-hello-odroidc2: build-hello-odroidc2
 		MQ_BOARD=$(ODROIDC2_BOARD) \
 		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG_ODROIDC2) \
 		IMG_NAME="hello-world-odroidc2.img" \
+		MQ_COMPLETION_TEXT="hello, world"
+
+.PHONY: run-hello-zcu102
+run-hello-zcu102: build-hello-zcu102
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD=$(ZCU102_BOARD) \
+		PATH_TO_LOADER_IMG=$(HELLO_LOADER_IMG_ZCU102) \
+		IMG_NAME="hello-world-zcu102.img" \
 		MQ_COMPLETION_TEXT="hello, world"
 
 # MMC Driver
