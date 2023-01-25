@@ -44,6 +44,8 @@ MMC_TEST_E2E_DIR = $(MMC_TEST_DIR)/e2e
 # SoCs / SoMs.
 IMX8MM_BOARD = imx8mm
 XAVIER_BOARD = xavier_1
+RPI3_BOARD = rpi3
+RPI4B_BOARD = rpi4B
 
 # =================================
 # Build artifacts
@@ -379,6 +381,14 @@ console-imx8mm:
 .PHONY: console-xavier
 console-xavier:
 	$(MAKE) console BOARD=$(XAVIER_BOARD)
+
+.PHONY: console-rpi3
+console-rpi3:
+	$(MAKE) console BOARD=$(RPI3_BOARD)
+
+.PHONY: console-rpi4b
+console-rpi4b:
+	$(MAKE) console BOARD=$(RPI4B_BOARD)
 
 # ==================================
 # Run
