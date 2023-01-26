@@ -332,6 +332,7 @@ init-xavier-port-ivan:
 	# Call the `init` Make command in the `xavier-port-ivan` submodule.
 	$(MAKE) -C $(XAVIER_PORT_IVAN_SUBMODULE) init
 
+# This command should be run locally.
 .PHONY: init-uboot-rpi4b
 init-uboot-rpi4b:
 # Only build the Core Platform if the SDK doesn't exist already.
@@ -529,7 +530,7 @@ build-xavier-port-ivan:
 # uboot-rpi4b.
 
 # This command should only be run remotely since it will not working locally.
-# make remote MAKE_CMD="build-uboot-rpi4b"
+# E.g. $ make remote MAKE_CMD="build-uboot-rpi4b"
 .PHONY: build-uboot-rpi4b
 build-uboot-rpi4b:
 	$(MAKE) \
