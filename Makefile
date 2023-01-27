@@ -670,6 +670,17 @@ run-hello-rpi3b: build-hello-rpi3b
 		IMG_NAME="hello-world-rpi3b.img" \
 		MQ_COMPLETION_TEXT="hello, world"
 
+.PHONY: run-hello-rpi3bp-home
+run-hello-rpi3bp-home: build-hello-rpi3b
+	# Copy the sel4test image to the TS server.
+	$(MAKE) scp-file-to-server \
+		DST_USER_HOST=$(TFTP_HOME_USER_HOST) \
+		SRC_PATH=$(HELLO_LOADER_IMG_RPI3B) \
+		DST_PATH=~/Downloads/loader-rpi3bp.img
+	# Symlink /tftpboot/rpi3bp/loader-rpi3bp.img file to to the file we just scp-ed to the server's ~/Downloads dir.
+	ssh -t $(TFTP_HOME_USER_HOST) "\
+		bash -ilc 'ln -sf /home/patrick/Downloads/loader-rpi3bp.img /tftpboot/rpi3bp/image.bin' ; "
+
 .PHONY: run-hello-odroidc2
 run-hello-odroidc2: build-hello-odroidc2
 	$(MAKE) run-img-on-mq \
