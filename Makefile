@@ -8,6 +8,7 @@ SEL4CP_PATRICK_SUBMODULE = $(PWD)/sel4cp-patrick
 SDDF_SUBMODULE = $(PWD)/sddf
 PLAYGROUND_SUBMODULE = $(PWD)/sddf-playground
 SERIAL_SUBMODULE = $(PWD)/sddf-serial
+SERIAL_RPI3B_SUBMODULE = $(PWD)/sddf-serial-rpi3b
 MMC_SUBMODULE = $(PWD)/sddf-mmc
 HELLO_SUBMODULE = $(PWD)/hello-world
 WORKSHOP_SUBMODULE = $(PWD)/sel4cp-workshop
@@ -42,6 +43,7 @@ LUCY_LIBC = $(RESOURCES_DIR)/lucy-libc/libc.a
 SDDF_SRC_DIR = $(SDDF_SUBMODULE)/echo_server
 PLAYGROUND_SRC_DIR = $(PLAYGROUND_SUBMODULE)/echo_server
 SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
+SERIAL_RPI3B_SRC_DIR = $(SERIAL_RPI3B_SUBMODULE)/serial
 MMC_SRC_DIR = $(MMC_SUBMODULE)/mmc
 HELLO_SRC_DIR = $(HELLO_SUBMODULE)
 WORKSHOP_SRC_DIR = $(WORKSHOP_SUBMODULE)/workshop
@@ -85,6 +87,9 @@ PLAYGROUND_LOADER_IMG = $(PLAYGROUND_BUILD_DIR)/loader.img
 # Serial Driver
 SERIAL_BUILD_DIR = $(SERIAL_SRC_DIR)/build
 SERIAL_LOADER_IMG = $(SERIAL_BUILD_DIR)/loader.img
+
+SERIAL_RPI3B_BUILD_DIR = $(SERIAL_RPI3B_SRC_DIR)/build
+SERIAL_RPI3B_LOADER_IMG = $(SERIAL_RPI3B_BUILD_DIR)/loader.img
 
 # MMC Driver
 MMC_BUILD_DIR = $(MMC_SRC_DIR)/build
@@ -436,6 +441,18 @@ build-serial: \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
 
+.PHONY: build-serial-rpi3b
+build-serial-rpi3b: \
+	build-sel4cp-patrick
+	$(MAKE) patch-sel4cp-patrick-sdk \
+		SEL4CP_BOARD=$(RPI3B_BOARD)
+	$(MAKE) \
+		-C $(SERIAL_RPI3B_SRC_DIR) \
+		BUILD_DIR=$(SERIAL_RPI3B_BUILD_DIR) \
+		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
+		SEL4CP_BOARD=$(RPI3B_BOARD) \
+		SEL4CP_CONFIG=debug
+
 # MMC Driver
 
 .PHONY: build-mmc
@@ -642,6 +659,17 @@ run-serial: build-serial
 		MQ_BOARD=$(SEL4CP_BOARD) \
 		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
 		IMG_NAME="sddf-serial.img"
+
+.PHONY: run-serial-rpi3b-home
+run-serial-rpi3b-home: build-serial-rpi3b
+	# Copy the loader image to my home TFTP server.
+	$(MAKE) scp-file-to-server \
+		DST_USER_HOST=$(TFTP_HOME_USER_HOST) \
+		SRC_PATH=$(SERIAL_RPI3B_LOADER_IMG) \
+		DST_PATH=~/Downloads/serial-rpi3b.img
+	# Symlink /tftpboot/rpi3bp/serial-rpi3b.img file to to the file we just scp-ed to the server's ~/Downloads dir.
+	ssh -t $(TFTP_HOME_USER_HOST) "\
+		bash -ilc 'ln -sf /home/patrick/Downloads/serial-rpi3b.img /tftpboot/rpi3bp/image.bin' ; "
 
 # Enables you to send chars to the UART port of the device.
 # Ctrl + e, c, f : Hooks you up to the serial port to start sending chars. If you
