@@ -26,3 +26,6 @@
 	path = uboot-rpi4b
 	url = git@github.com:patrick-forks/uboot-patrick.git
 	branch = patrick
+[submodule "sddf-serial-rpi3"]
+	path = sddf-serial-rpi3
+	url = git@github.com:ptrk8/sddf-serial-rpi3.git
