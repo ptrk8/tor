@@ -660,6 +660,9 @@ run-serial: build-serial
 		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
 		IMG_NAME="sddf-serial.img"
 
+# This can only be run remotely.
+# E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="run-serial-rpi3b-home"
+# Make sure to restart the Raspberry Pi after running this Make command.
 .PHONY: run-serial-rpi3b-home
 run-serial-rpi3b-home: build-serial-rpi3b
 	# Copy the loader image to my home TFTP server.
