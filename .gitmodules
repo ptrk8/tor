@@ -22,13 +22,17 @@
 [submodule "uboot-patrick"]
 	path = uboot-patrick
 	url = git@github.com:patrick-forks/uboot-patrick.git
-[submodule "uboot-rpi4b"]
-	path = uboot-rpi4b
-	url = git@github.com:patrick-forks/uboot-patrick.git
-	branch = patrick
 [submodule "sddf-serial-rpi3b"]
 	path = sddf-serial-rpi3b
 	url = git@github.com:ptrk8/sddf-serial-rpi3b.git
 [submodule "sddf-mmc-rpi3b"]
 	path = sddf-mmc-rpi3b
 	url = git@github.com:ptrk8/sddf-mmc-rpi3b.git
+[submodule "uboot-rpi4b"]
+	path = uboot-rpi4b
+	url = git@github.com:patrick-forks/uboot-patrick.git
+	branch = patrick
+[submodule "uboot-rpi3b"]
+	path = uboot-rpi3b
+	url = git@github.com:patrick-forks/uboot-patrick.git
+	branch = patrick
