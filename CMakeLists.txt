@@ -20,6 +20,7 @@ target_include_directories(lib_sel4cp_rpi3b INTERFACE ${CMAKE_SOURCE_DIR}/sel4cp
 add_subdirectory(sddf-serial/)
 add_subdirectory(sddf-serial-rpi3b/)
 add_subdirectory(sddf-mmc/)
+add_subdirectory(sddf-mmc-rpi3b/)
 add_subdirectory(sddf-playground/)
 add_subdirectory(hello-world/)
 add_subdirectory(sel4cp-workshop/)

@@ -29,3 +29,6 @@
 [submodule "sddf-serial-rpi3b"]
 	path = sddf-serial-rpi3b
 	url = git@github.com:ptrk8/sddf-serial-rpi3b.git
+[submodule "sddf-mmc-rpi3b"]
+	path = sddf-mmc-rpi3b
+	url = git@github.com:ptrk8/sddf-mmc-rpi3b.git
