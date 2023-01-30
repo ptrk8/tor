@@ -692,8 +692,10 @@ run-serial-rpi3bp-home: build-serial-rpi3b
 	$(MAKE) scp-file-to-server \
 		DST_USER_HOST=$(TFTP_HOME_USER_HOST) \
 		SRC_PATH=$(SERIAL_RPI3B_LOADER_IMG) \
-		DST_PATH=~/Downloads/serial-rpi3b.img
-	# Symlink /tftpboot/rpi3bp/serial-rpi3b.img file to to the file we just scp-ed to the server's ~/Downloads dir.
+		DST_PATH=~/Downloads/serial-rpi3bp.img
+	# Symlink /tftpboot/rpi3bp/serial-rpi3bp.img file to to the file we just scp-ed to the server's ~/Downloads dir.
+	ssh -t $(TFTP_HOME_USER_HOST) "\
+		bash -ilc 'ln -sf /home/patrick/Downloads/serial-rpi3bp.img /tftpboot/rpi3bp/image.bin' ; "
 
 # This can only be run remotely.
 # E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="run-serial-rpi3b-mq"
