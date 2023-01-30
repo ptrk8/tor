@@ -10,6 +10,7 @@ PLAYGROUND_SUBMODULE = $(PWD)/sddf-playground
 SERIAL_SUBMODULE = $(PWD)/sddf-serial
 SERIAL_RPI3B_SUBMODULE = $(PWD)/sddf-serial-rpi3b
 MMC_SUBMODULE = $(PWD)/sddf-mmc
+MMC_RPI3B_SUBMODULE = $(PWD)/sddf-mmc-rpi3b
 HELLO_SUBMODULE = $(PWD)/hello-world
 WORKSHOP_SUBMODULE = $(PWD)/sel4cp-workshop
 XAVIER_PORT_IVAN_SUBMODULE = $(PWD)/xavier-port-ivan
@@ -46,6 +47,7 @@ PLAYGROUND_SRC_DIR = $(PLAYGROUND_SUBMODULE)/echo_server
 SERIAL_SRC_DIR = $(SERIAL_SUBMODULE)/serial
 SERIAL_RPI3B_SRC_DIR = $(SERIAL_RPI3B_SUBMODULE)/serial
 MMC_SRC_DIR = $(MMC_SUBMODULE)/mmc
+MMC_RPI3B_SRC_DIR = $(MMC_RPI3B_SUBMODULE)/mmc
 HELLO_SRC_DIR = $(HELLO_SUBMODULE)
 WORKSHOP_SRC_DIR = $(WORKSHOP_SUBMODULE)/workshop
 
@@ -95,6 +97,10 @@ SERIAL_RPI3B_LOADER_IMG = $(SERIAL_RPI3B_BUILD_DIR)/loader.img
 # MMC Driver
 MMC_BUILD_DIR = $(MMC_SRC_DIR)/build
 MMC_LOADER_IMG = $(MMC_BUILD_DIR)/loader.img
+
+# MMC Rpi3B Driver
+MMC_RPI3B_BUILD_DIR = $(MMC_RPI3B_SRC_DIR)/build
+MMC_RPI3B_LOADER_IMG = $(MMC_RPI3B_BUILD_DIR)/loader.img
 
 # Hello World
 HELLO_BUILD_DIR_IMX8MM = $(HELLO_SRC_DIR)/build-imx8mm
@@ -208,6 +214,13 @@ clean-serial:
 clean-mmc:
 	rm -rf $(MMC_BUILD_DIR)
 	rm -rf $(MMC_LOADER_IMG)
+
+# This command should be run on the remote machine.
+# E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="clean-mmc-rpi3b"
+.PHONY: clean-mmc-rpi3b
+clean-mmc-rpi3b:
+	rm -rf $(MMC_RPI3B_BUILD_DIR)
+	rm -rf $(MMC_RPI3B_LOADER_IMG)
 
 .PHONY: clean-hello-imx8mm
 clean-hello-imx8mm:
@@ -477,6 +490,18 @@ build-mmc: \
 		SEL4CP_BOARD=$(SEL4CP_BOARD) \
 		SEL4CP_CONFIG=debug
 
+.PHONY: build-mmc-rpi3b
+build-mmc-rpi3b: \
+	build-sel4cp-patrick
+	$(MAKE) patch-sel4cp-patrick-sdk \
+		SEL4CP_BOARD=$(RPI3B_BOARD)
+	make \
+		-C $(MMC_RPI3B_SRC_DIR) \
+		BUILD_DIR=$(MMC_RPI3B_BUILD_DIR) \
+		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
+		SEL4CP_BOARD=$(RPI3B_BOARD) \
+		SEL4CP_CONFIG=debug
+
 # Hello World
 
 .PHONY: build-hello-imx8mm
@@ -683,7 +708,7 @@ run-serial: build-serial
 		PATH_TO_LOADER_IMG=$(SERIAL_LOADER_IMG) \
 		IMG_NAME="sddf-serial.img"
 
-# This can only be run remotely.
+# This should only be run remotely.
 # E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="run-serial-rpi3bp-home"
 # Make sure to restart the Raspberry Pi after running this Make command.
 .PHONY: run-serial-rpi3bp-home
@@ -693,11 +718,11 @@ run-serial-rpi3bp-home: build-serial-rpi3b
 		DST_USER_HOST=$(TFTP_HOME_USER_HOST) \
 		SRC_PATH=$(SERIAL_RPI3B_LOADER_IMG) \
 		DST_PATH=~/Downloads/serial-rpi3bp.img
-	# Symlink /tftpboot/rpi3bp/serial-rpi3bp.img file to to the file we just scp-ed to the server's ~/Downloads dir.
+	# Symlink /tftpboot/rpi3bp/serial-rpi3bp.img file to the file we just scp-ed to the server's ~/Downloads dir.
 	ssh -t $(TFTP_HOME_USER_HOST) "\
 		bash -ilc 'ln -sf /home/patrick/Downloads/serial-rpi3bp.img /tftpboot/rpi3bp/image.bin' ; "
 
-# This can only be run remotely.
+# This should only be run remotely.
 # E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="run-serial-rpi3b-mq"
 # Make sure to restart the Raspberry Pi after running this Make command.
 .PHONY: run-serial-rpi3b-mq
@@ -706,8 +731,30 @@ run-serial-rpi3b-mq: build-serial-rpi3b
 		MQ_BOARD="rpi3" \
 		PATH_TO_LOADER_IMG=$(SERIAL_RPI3B_LOADER_IMG) \
 		IMG_NAME="sddf-rpi3b.img"
+
+# This should only be run remotely.
+# E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="run-mmc-rpi3bp-home"
+# Make sure to restart the Raspberry Pi after running this Make command.
+.PHONY: run-mmc-rpi3bp-home
+run-mmc-rpi3bp-home: build-mmc-rpi3b
+	# Copy the loader image to my home TFTP server.
+	$(MAKE) scp-file-to-server \
+		DST_USER_HOST=$(TFTP_HOME_USER_HOST) \
+		SRC_PATH=$(MMC_RPI3B_LOADER_IMG) \
+		DST_PATH=~/Downloads/mmc-rpi3b.img
+	# Symlink /tftpboot/rpi3bp/mmc-rpi3b.img file to the file we just scp-ed to the server's ~/Downloads dir.
 	ssh -t $(TFTP_HOME_USER_HOST) "\
-		bash -ilc 'ln -sf /home/patrick/Downloads/serial-rpi3b.img /tftpboot/rpi3bp/image.bin' ; "
+		bash -ilc 'ln -sf /home/patrick/Downloads/mmc-rpi3b.img /tftpboot/rpi3bp/image.bin' ; "
+
+# This should only be run remotely.
+# E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="run-mmc-rpi3b-mq"
+# Make sure to restart the Raspberry Pi after running this Make command.
+.PHONY: run-mmc-rpi3b-mq
+run-mmc-rpi3b-mq: build-mmc-rpi3b
+	$(MAKE) run-img-on-mq \
+		MQ_BOARD="rpi3" \
+		PATH_TO_LOADER_IMG=$(MMC_RPI3B_LOADER_IMG) \
+		IMG_NAME="mmc-rpi3b.img"
 
 # Enables you to send chars to the UART port of the device.
 # Ctrl + e, c, f : Hooks you up to the serial port to start sending chars. If you
