@@ -756,6 +756,20 @@ run-mmc-rpi3b-mq: build-mmc-rpi3b
 		PATH_TO_LOADER_IMG=$(MMC_RPI3B_LOADER_IMG) \
 		IMG_NAME="mmc-rpi3b.img"
 
+# This should only be run remotely.
+# E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="run-mmc-rpi3bp-tsdesk"
+# Make sure to restart the Raspberry Pi after running this Make command.
+.PHONY: run-mmc-rpi3bp-tsdesk
+run-mmc-rpi3bp-tsdesk: build-mmc-rpi3b
+	# Copy the file to the TS server.
+	$(MAKE) scp-file-to-server \
+		DST_USER_HOST=$(TS_USER_HOST) \
+		SRC_PATH=$(MMC_RPI3B_LOADER_IMG) \
+		DST_PATH=~/Downloads/mmc-rpi3b.img
+	# Symlink /tftpboot file to the image we copied to the TS server.
+	ssh -t $(TS_USER_HOST) "\
+		bash -ilc 'ssh -t patrickh@tftp \"ln -sf /home/patrickh/Downloads/mmc-rpi3b.img /tftpboot/rpi3/loader.img\"' ; "
+
 # Enables you to send chars to the UART port of the device.
 # Ctrl + e, c, f : Hooks you up to the serial port to start sending chars. If you
 # wait after the image is running on the device before you run this Make
