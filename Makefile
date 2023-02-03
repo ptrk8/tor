@@ -794,6 +794,17 @@ run-hello-rpi3bp-home: build-hello-rpi3b
 	ssh -t $(TFTP_HOME_USER_HOST) "\
 		bash -ilc 'ln -sf /home/patrick/Downloads/loader-rpi3bp.img /tftpboot/rpi3bp/image.bin' ; "
 
+.PHONY: run-hello-rpi3bp-tsdesk
+run-hello-rpi3bp-tsdesk: build-hello-rpi3b
+	# Copy the file to the TS server.
+	$(MAKE) scp-file-to-server \
+		DST_USER_HOST=$(TS_USER_HOST) \
+		SRC_PATH=$(HELLO_LOADER_IMG_RPI3B) \
+		DST_PATH=~/Downloads/loader-rpi3bp.img
+	# Symlink /tftpboot file to the image we copied to the TS server.
+	ssh -t $(TS_USER_HOST) "\
+		bash -ilc 'ssh -t patrickh@tftp \"ln -sf /home/patrickh/Downloads/loader-rpi3bp.img /tftpboot/rpi3/loader.img\"' ; "
+
 .PHONY: run-hello-odroidc2
 run-hello-odroidc2: build-hello-odroidc2
 	$(MAKE) run-img-on-mq \
