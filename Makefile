@@ -255,6 +255,7 @@ clean-xavier-port-ivan:
 # Push to remote servers
 # =================================
 
+.PHONY: push-home
 push-home:
 	# Make the directory on the remote server if it doesn't exist already.
 	ssh -t $(SERVER_USER_HOST) "mkdir -p $(SERVER_REMOTE_DIR)$(PWD_DIR)"
