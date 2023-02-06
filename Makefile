@@ -938,20 +938,33 @@ test-e2e-serial: build-serial
 # Machine Queue
 # ==================================
 
+# This command should be run locally:
+# $ make -C ~/code/courses/unsw/tor/tor mq-getlock BOARD=rpi3
 .PHONY: mq-getlock
 mq-getlock:
 	ssh -t $(TS_USER_HOST) "\
 		bash -ilc 'mq.sh sem -f -signal $(BOARD)' ; "
 
+# This command should be run locally:
+# $ make -C ~/code/courses/unsw/tor/tor mq-getlock-imx8mm
 .PHONY: mq-getlock-imx8mm
 mq-getlock-imx8mm:
 	$(MAKE) mq-getlock \
 		BOARD=$(IMX8MM_BOARD)
 
+# This command should be run locally:
+# $ make -C ~/code/courses/unsw/tor/tor mq-getlock-xavier
 .PHONY: mq-getlock-xavier
 mq-getlock-xavier:
 	$(MAKE) mq-getlock \
 		BOARD=$(XAVIER_BOARD)
+
+# This command should be run locally:
+# $ make -C ~/code/courses/unsw/tor/tor mq-getlock-rpi3b
+.PHONY: mq-getlock-rpi3b
+mq-getlock-rpi3b:
+	$(MAKE) mq-getlock \
+		BOARD="rpi3"
 
 .PHONY: mq-systems
 mq-systems:
