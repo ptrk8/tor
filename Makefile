@@ -16,6 +16,7 @@ WORKSHOP_SUBMODULE = $(PWD)/sel4cp-workshop
 XAVIER_PORT_IVAN_SUBMODULE = $(PWD)/xavier-port-ivan
 UBOOT_RPI4B_SUBMODULE = $(PWD)/uboot-rpi4b
 UBOOT_RPI3B_SUBMODULE = $(PWD)/uboot-rpi3b
+UBOOT_RPI3BP_SUBMODULE = $(PWD)/uboot-rpi3bp
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
@@ -372,6 +373,16 @@ else
 	@echo "No need to initialise RPI3B U-Boot submodule since it already exists."
 endif
 
+# This command should be run locally.
+.PHONY: init-uboot-rpi3bp
+init-uboot-rpi3bp:
+# Only build the Core Platform if the SDK doesn't exist already.
+ifeq ("$(wildcard $(UBOOT_RPI3BP_SUBMODULE))","")
+	git submodule add -b patrick -- git@github.com:patrick-forks/uboot-patrick.git uboot-rpi3bp
+else
+	@echo "No need to initialise RPI3BP U-Boot submodule since it already exists."
+endif
+
 # ==================================
 # Build
 # ==================================
@@ -605,6 +616,18 @@ build-uboot-rpi3b:
 		rpi_3_defconfig
 	$(MAKE) \
 		-C $(UBOOT_RPI3B_SUBMODULE) \
+		CROSS_COMPILE=aarch64-linux-gnu-
+
+# This command should only be run remotely since it will not working locally.
+# E.g. $ make remote MAKE_CMD="build-uboot-rpi3bp"
+.PHONY: build-uboot-rpi3bp
+build-uboot-rpi3bp:
+	$(MAKE) \
+		-C $(UBOOT_RPI3BP_SUBMODULE) \
+		CROSS_COMPILE=aarch64-linux-gnu- \
+		rpi_3_b_plus_defconfig
+	$(MAKE) \
+		-C $(UBOOT_RPI3BP_SUBMODULE) \
 		CROSS_COMPILE=aarch64-linux-gnu-
 
 # ==================================

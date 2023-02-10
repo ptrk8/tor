@@ -36,3 +36,7 @@
 	path = uboot-rpi3b
 	url = git@github.com:patrick-forks/uboot-patrick.git
 	branch = patrick
+[submodule "uboot-rpi3bp"]
+	path = uboot-rpi3bp
+	url = git@github.com:patrick-forks/uboot-patrick.git
+	branch = patrick
