@@ -2,6 +2,7 @@
 PWD_DIR = "$(shell basename $$(pwd))"
 RESOURCES_DIR = $(PWD)/resources
 TMP_DIR = $(PWD)/tmp
+SCRIPTS_DIR = $(PWD)/scripts
 
 SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
@@ -821,6 +822,9 @@ run-mmc-rpi3bp-serial: \
 		SRC_USER_HOST=$(SERVER_USER_HOST) \
 		SRC_PATH="$(SERVER_REMOTE_DIR)/tor/sddf-mmc-rpi3b/mmc/build/loader.img" \
 		DST_PATH=$(TMP_DIR)/mmc-rpi3bp.img
+	# Load the binary via UART.
+	cd $(SCRIPTS_DIR) && \
+		./kermit-sddf-mmc-rpi3bp.sh
 
 # Enables you to send chars to the UART port of the device.
 # Ctrl + e, c, f : Hooks you up to the serial port to start sending chars. If you
