@@ -1,6 +1,7 @@
 
 PWD_DIR = "$(shell basename $$(pwd))"
 RESOURCES_DIR = $(PWD)/resources
+TMP_DIR = $(PWD)/tmp
 
 SEL4_SUBMODULE = $(PWD)/sel4
 SEL4CP_SUBMODULE = $(PWD)/sel4cp
@@ -187,6 +188,10 @@ clean: \
 	clean-hello-zcu102 \
 	clean-workshop \
 
+.PHONY: clean-tmp
+clean-tmp:
+	rm -rf $(TMP_DIR)/*
+
 .PHONY: clean-sel4cp
 clean-sel4cp:
 	rm -rf $(SEL4CP_PYTHON_VENV_PATH)
@@ -267,6 +272,7 @@ push-home:
  			--exclude "$(SEL4CP_PATRICK_PYTHON_VENV_NAME)" \
  			--exclude "build" \
  			--exclude "release" \
+ 			--exclude "tmp" \
  			./ $(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)
 
 # ==================================
@@ -282,6 +288,10 @@ remote: push-home
 # ==================================
 # Initialisation
 # ==================================
+
+.PHONY: directories
+directories:
+	mkdir -p $(TMP_DIR)
 
 .PHONY: init
 init: \
@@ -679,6 +689,11 @@ MQ_COMPLETION_TEXT ?= something-obscure
 scp-file-to-server:
 	scp $(SRC_PATH) $(DST_USER_HOST):$(DST_PATH)
 
+# Copies a file from a remote server.
+.PHONY: scp-file-from-server
+scp-file-from-server:
+	scp $(SRC_USER_HOST):$(SRC_PATH) $(DST_PATH)
+
 .PHONY: run-img-on-mq
 run-img-on-mq:
 	# Copy the loader image to the TS server.
@@ -793,6 +808,19 @@ run-mmc-rpi3bp-tsdesk: build-mmc-rpi3b
 	# Symlink /tftpboot file to the image we copied to the TS server.
 	ssh -t $(TS_USER_HOST) "\
 		bash -ilc 'ssh -t patrickh@tftp \"ln -sf /home/patrickh/Downloads/mmc-rpi3b.img /tftpboot/rpi3/loader.img\"' ; "
+
+# This command should be run locally.
+.PHONY: run-mmc-rpi3bp-serial
+run-mmc-rpi3bp-serial: \
+	directories \
+	clean-tmp
+	# Build MMC image for the Rpi3b+ on the remote machine.
+	$(MAKE) remote MAKE_CMD="build-mmc-rpi3b"
+	# Copy the file from remote server to TMP_DIR.
+	$(MAKE) scp-file-from-server \
+		SRC_USER_HOST=$(SERVER_USER_HOST) \
+		SRC_PATH="$(SERVER_REMOTE_DIR)/tor/sddf-mmc-rpi3b/mmc/build/loader.img" \
+		DST_PATH=$(TMP_DIR)/mmc-rpi3bp.img
 
 # Enables you to send chars to the UART port of the device.
 # Ctrl + e, c, f : Hooks you up to the serial port to start sending chars. If you
