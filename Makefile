@@ -949,6 +949,10 @@ run-xavier-port-ivan-home: build-xavier-port-ivan
 # Debug
 # ==================================
 
+# ==================================
+# Serial Driver
+# ==================================
+
 # This is the `objdump` command for ELF binaries in the $(SERIAL_BUILD_DIR).
 # This command won't work if you run it remotely via $ make remote
 # MAKE_CMD="objdump-serial".
@@ -969,6 +973,25 @@ objdump-serial-serial_client:
 .PHONY: objdump-serial-serial_driver
 objdump-serial-serial_driver:
 	$(MAKE) objdump-serial PATH_TO_ELF="serial_driver.elf"
+
+# ==================================
+# MMC Driver
+# ==================================
+
+# This is the `objdump` command for ELF binaries in the $(MMC_RPI3B_BUILD_DIR).
+# This command won't work if you run it remotely via $ make remote
+# MAKE_CMD="objdump-mmc-rpi3bp".
+.PHONY: objdump-mmc-rpi3bp
+objdump-mmc-rpi3bp:
+	aarch64-linux-gnu-objdump \
+		-Dlx $(MMC_RPI3B_BUILD_DIR)/$(PATH_TO_ELF) \
+		| less
+
+# This command can and should be run remotely via $ make remote
+# MAKE_CMD="objdump-mmc-rpi3bp-mmc".
+.PHONY: objdump-mmc-rpi3bp-mmc
+objdump-mmc-rpi3bp-mmc:
+	$(MAKE) objdump-mmc-rpi3bp PATH_TO_ELF="mmc.elf"
 
 # ==================================
 # Test
