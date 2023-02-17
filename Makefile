@@ -988,10 +988,10 @@ objdump-mmc-rpi3bp:
 		| less
 
 # This command can and should be run remotely via $ make remote
-# MAKE_CMD="objdump-mmc-rpi3bp-mmc".
-.PHONY: objdump-mmc-rpi3bp-mmc
-objdump-mmc-rpi3bp-mmc:
-	$(MAKE) objdump-mmc-rpi3bp PATH_TO_ELF="mmc.elf"
+# MAKE_CMD="objdump-mmc-rpi3bp-mmc_driver".
+.PHONY: objdump-mmc-rpi3bp-mmc_driver
+objdump-mmc-rpi3bp-mmc_driver:
+	$(MAKE) objdump-mmc-rpi3bp PATH_TO_ELF="mmc_driver.elf"
 
 # ==================================
 # Test
