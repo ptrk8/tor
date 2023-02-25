@@ -271,9 +271,10 @@ push-home:
  			--delete \
  			--exclude "$(SEL4CP_PYTHON_VENV_NAME)" \
  			--exclude "$(SEL4CP_PATRICK_PYTHON_VENV_NAME)" \
- 			--exclude "build" \
+ 			--exclude "build*" \
  			--exclude "release" \
  			--exclude "tmp" \
+ 			--exclude='/.git' \
  			./ $(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)
 
 # ==================================
@@ -1011,6 +1012,15 @@ test-e2e-serial: build-serial
 		IMG_NAME="sddf-serial.img" \
 		MQ_COMPLETION_TEXT="=== END ===" | \
 		EXPECTED=$(SERIAL_TEST_E2E_DIR)/expected/expected_imx_uart.txt $(SERIAL_TEST_E2E_DIR)/scripts/assert_imx_uart.py
+
+# MMC Driver
+.PHONY: test-unit-mmc-rpi3b
+test-unit-mmc-rpi3b:
+	$(MAKE) -C $(MMC_RPI3B_SUBMODULE) test-unit
+
+.PHONY: test-unit-valgrind-mmc-rpi3b
+test-unit-valgrind-mmc-rpi3b:
+	$(MAKE) -C $(MMC_RPI3B_SUBMODULE) test-unit-valgrind
 
 # ==================================
 # Machine Queue
