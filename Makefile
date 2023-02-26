@@ -274,7 +274,6 @@ push-home:
  			--exclude "build*" \
  			--exclude "release" \
  			--exclude "tmp" \
- 			--exclude='/.git' \
  			./ $(SERVER_USER_HOST):$(SERVER_REMOTE_DIR)$(PWD_DIR)
 
 # ==================================
@@ -333,7 +332,7 @@ init-sel4cp:
 init-sel4cp-patrick:
 	# Checkout "rpi4b_rpi3b_odroidc2_support" branch.
 	cd $(SEL4CP_PATRICK_SUBMODULE) && \
-		  git checkout rpi4b_rpi3b_odroidc2_support
+		  git checkout patrick
 	# Create Python Virtual Environment
 	python3.9 -m venv $(SEL4CP_PATRICK_PYTHON_VENV_PATH)
 	# Upgrade pip, setuptools and wheel.
@@ -420,6 +419,7 @@ else
 	@echo "No need to build Core Platform since SDK already exists"
 endif
 
+# Run this remotely: make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="build-sel4cp-patrick"
 .PHONY: build-sel4cp-patrick
 build-sel4cp-patrick:
 # Only build the Core Platform if the SDK doesn't exist already.
