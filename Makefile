@@ -226,6 +226,7 @@ clean-mmc:
 # E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="clean-mmc-rpi3b"
 .PHONY: clean-mmc-rpi3b
 clean-mmc-rpi3b:
+	$(MAKE) -C $(MMC_RPI3B_SUBMODULE) clean
 	rm -rf $(MMC_RPI3B_BUILD_DIR)
 	rm -rf $(MMC_RPI3B_LOADER_IMG)
 
