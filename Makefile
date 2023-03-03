@@ -994,6 +994,12 @@ objdump-mmc-rpi3bp:
 objdump-mmc-rpi3bp-mmc_driver:
 	$(MAKE) objdump-mmc-rpi3bp PATH_TO_ELF="mmc_driver.elf"
 
+# This command can and should be run remotely via $ make remote
+# MAKE_CMD="objdump-mmc-rpi3bp-timer_driver".
+.PHONY: objdump-mmc-rpi3bp-timer_driver
+objdump-mmc-rpi3bp-timer_driver:
+	$(MAKE) objdump-mmc-rpi3bp PATH_TO_ELF="timer_driver.elf"
+
 # ==================================
 # Test
 # ==================================
