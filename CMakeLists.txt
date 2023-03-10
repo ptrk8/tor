@@ -1,7 +1,10 @@
-
-
 cmake_minimum_required(VERSION 3.7.2)
 project(tor C)
+
+# Fix behavior of CMAKE_C_STANDARD when targeting macOS.
+if (POLICY CMP0025)
+    cmake_policy(SET CMP0025 NEW)
+endif ()
 
 #include_directories(${CMAKE_SOURCE_DIR}/sel4cp/release/sel4cp-sdk-1.2.6/board/imx8mm/debug/include/)
 # Create Header-Only libraries for sel4cp and sel4. To be linked to sel4cp C programs.
