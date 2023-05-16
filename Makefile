@@ -518,8 +518,7 @@ build-mmc: \
 .PHONY: build-mmc-rpi3b
 build-mmc-rpi3b: \
 	build-sel4cp-patrick
-	$(MAKE) patch-sel4cp-patrick-sdk \
-		SEL4CP_BOARD=$(RPI3B_BOARD)
+	# Specifically not patching the SDK here since we're using our own libc.
 	make \
 		-C $(MMC_RPI3B_SRC_DIR) \
 		BUILD_DIR=$(MMC_RPI3B_BUILD_DIR) \
