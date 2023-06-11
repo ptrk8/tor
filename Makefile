@@ -788,6 +788,13 @@ run-mmc-rpi3bp-home: build-mmc-rpi3b
 		bash -ilc 'ln -sf /home/patrick/Downloads/mmc-rpi3bp.img /tftpboot/rpi3bp/image.bin' ; "
 
 # This should only be run remotely.
+# E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="clean-run-mmc-rpi3bp-home"
+.PHONY: clean-run-mmc-rpi3bp-home
+clean-run-mmc-rpi3bp-home: \
+	clean-mmc-rpi3b \
+	run-mmc-rpi3bp-home
+
+# This should only be run remotely.
 # E.g. $ make -C ~/code/courses/unsw/tor/tor remote MAKE_CMD="run-mmc-rpi3b-mq"
 # Make sure to restart the Raspberry Pi after running this Make command.
 .PHONY: run-mmc-rpi3b-mq
@@ -999,6 +1006,12 @@ objdump-mmc-rpi3bp-mmc_driver:
 .PHONY: objdump-mmc-rpi3bp-timer_driver
 objdump-mmc-rpi3bp-timer_driver:
 	$(MAKE) objdump-mmc-rpi3bp PATH_TO_ELF="timer_driver.elf"
+
+# This command can and should be run remotely via $ make remote
+# MAKE_CMD="objdump-mmc-rpi3bp-fatfs".
+.PHONY: objdump-mmc-rpi3bp-fatfs
+objdump-mmc-rpi3bp-fatfs:
+	$(MAKE) objdump-mmc-rpi3bp PATH_TO_ELF="fatfs.elf"
 
 # ==================================
 # Test
