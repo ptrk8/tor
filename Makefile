@@ -1,4 +1,3 @@
-
 PWD_DIR = "$(shell basename $$(pwd))"
 RESOURCES_DIR = $(PWD)/resources
 TMP_DIR = $(PWD)/tmp
@@ -22,6 +21,7 @@ UBOOT_RPI3BP_SUBMODULE = $(PWD)/uboot-rpi3bp
 
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
+NUM_SERVER_PROCS = 4
 SERVER_USER_HOST = patrick@vm_comp4961_ubuntu1804
 SERVER_REMOTE_DIR = ~/remote/$(shell hostname -s)/
 TS_USER_HOST = patrickh@login.trustworthy.systems
@@ -520,6 +520,7 @@ build-mmc-rpi3b: \
 	build-sel4cp-patrick
 	# Specifically not patching the SDK here since we're using our own libc.
 	make \
+		-j $(NUM_SERVER_PROCS) \
 		-C $(MMC_RPI3B_SRC_DIR) \
 		BUILD_DIR=$(MMC_RPI3B_BUILD_DIR) \
 		SEL4CP_SDK=$(SEL4CP_PATRICK_SDK_DIR) \
