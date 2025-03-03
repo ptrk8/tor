@@ -26,7 +26,7 @@ SERVER_USER_HOST = patrick@vm_comp4961_ubuntu1804
 SERVER_REMOTE_DIR = ~/remote/$(shell hostname -s)/
 TS_USER_HOST = patrickh@login.trustworthy.systems
 TFTP_UNSW_USER_HOST = patrickh@tftp.keg.cse.unsw.edu.au
-TFTP_HOME_USER_HOST = patrick@192.168.0.198
+TFTP_HOME_USER_HOST = patrick@172.16.0.41
 
 # =================================
 # Python Virtual Environments.
