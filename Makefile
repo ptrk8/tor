@@ -779,6 +779,9 @@ run-serial-rpi3b-mq: build-serial-rpi3b
 # Make sure to restart the Raspberry Pi after running this Make command.
 .PHONY: run-mmc-rpi3bp-home
 run-mmc-rpi3bp-home: build-mmc-rpi3b
+	# Create necessary directories on TFTP server.
+	ssh -t $(TFTP_HOME_USER_HOST) "\
+		bash -ilc 'mkdir -p ~/Downloads && mkdir -p /tftpboot/rpi3bp' ; "
 	# Copy the loader image to my home TFTP server.
 	$(MAKE) scp-file-to-server \
 		DST_USER_HOST=$(TFTP_HOME_USER_HOST) \
