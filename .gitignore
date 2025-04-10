@@ -4,3 +4,4 @@
 sel4cp_venv
 cmake-build-*
 tmp
+out
