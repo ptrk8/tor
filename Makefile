@@ -22,7 +22,7 @@ UBOOT_RPI3BP_SUBMODULE = $(PWD)/uboot-rpi3bp
 SEL4_COMMIT = 92f0f3ab28f00c97851512216c855f4180534a60
 
 NUM_SERVER_PROCS = 4
-SERVER_USER_HOST = patrick@vm_comp4961_ubuntu1804
+SERVER_USER_HOST = patrick@comp4961-ubuntu2204.home.arpa
 SERVER_REMOTE_DIR = ~/remote/$(shell hostname -s)/
 TS_USER_HOST = patrickh@login.trustworthy.systems
 TFTP_UNSW_USER_HOST = patrickh@tftp.keg.cse.unsw.edu.au
